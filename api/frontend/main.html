@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>NYT Best Seller Viewer</title>
+        
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@200&family=Lunasima:wght@400;700&display=swap" rel="stylesheet">
+        
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+	</head>
+
+    <style>
+        body {
+            padding: 0%;
+            margin: 0%;
+            font-family: 'Azeret Mono', monospace;
+            font-family: 'Lunasima', sans-serif;
+            background-color: rgb(248, 248, 248);
+        }
+
+        div.holder {
+            padding-left: 2px;
+            padding-right: 4px;
+        }
+        h1, h2, h3 {
+            padding-left: 2px;
+            padding-right: 2px;
+            font-size: 1rem;
+            color: rgb(66, 66, 66);
+        }
+        h1 {
+            font-size: 1.2rem;
+            color: black;
+        }
+        h2 {
+            color: rgb(66, 66, 66);
+            /* font-style: italic; */
+        }
+
+        p {
+            padding-left: 2px;
+            padding-right: 2px;
+        }
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+        button {
+            height:1.5rem;
+            margin-top: 2px;
+            margin-bottom: 2px;
+            border-radius: 2px;
+            border: none;
+            background-color: rgb(244, 244, 244);
+            box-shadow: 0px 1px 1px 1px rgb(144, 144, 144);
+        }
+        button:hover {background-color: rgb(227, 227, 227);}
+        button:active {background-color: rgb(243, 243, 243);
+            box-shadow: 0px -1px 1px 1px rgb(144, 144, 144);}
+
+        textarea {
+            width: 99%;
+            height:1.5rem;
+            background-color: rgb(255, 255, 255);
+            resize: none;
+            border-radius: 2px;
+            border: none;
+            box-shadow: 0px 1px 1px 1px rgb(144, 144, 144);
+            padding-left:4px;
+        }
+        select {
+            height:1.5rem;
+            border-radius: 2px;
+            border: none;
+            box-shadow: 0px 1px 1px 1px rgb(144, 144, 144);
+        }
+
+        .login {
+            margin: auto;
+            width: 20rem;
+            margin-top: 20rem;
+        }
+
+        .starholder {
+            margin-top: 0.2rem;
+        }
+        .star {
+            font-size: 1.5rem;
+            text-shadow: 0px 2px 2px rgb(114, 114, 114);
+        }
+        .star.checked {
+            color: orange;
+        }
+
+        .holder {
+            margin: auto;
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+            width: 60%;
+        }
+        
+
+        .holder.loginholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0%;
+            margin: 0%;
+            background-color: rgba(255, 255, 255, 0.95);
+            border:none;
+            z-index: 1600;
+        }
+        .holder.bookholder {
+            display: grid;
+            grid-template-columns: 20% 80%;
+        }
+        .holder.bookholder div img {
+            width: 100%;
+            border-radius: 5px;
+        }
+
+        .holder.bookholder .bookinfo {
+            padding-left: 1rem;
+        }
+        .holder.bookholder .bookinfo h1 span.rank{
+            color:rgb(87, 87, 87);
+            /* font-size: 2rem; */
+            font-style: italic;
+            margin-right: 1rem;
+        }
+        h2 span.author {
+            color: inherit;
+        }
+        h2 span.publisher {
+            color: rgb(177, 177, 177);
+        }
+        span.isbn{
+            font-family: 'Azeret Mono', monospace;
+            color:rgb(191, 191, 191);
+            font-size: 0.8rem;
+            /* margin-right: 1rem; */
+        }
+
+    </style>
+    
+    <body>
+        <!-- TODO -->
+        <!-- <div class="holder loginholder">
+            <div class="login">
+                <p>Login or Signup</p>
+                <textarea id="uname" placeholder="Username"></textarea>
+                <textarea id="pword" placeholder="Password"></textarea>
+                <button id="login">Login</button>
+                <button id="signup">Signup</button>
+                <p id="loginmessage"></p>
+            </div>
+        </div> -->
+        <div class="holder searchbar">
+            <p>Search NYT Best Sellers</p>
+            <textarea placeholder="Title, Author, etc"></textarea>
+            <button>Search</button>
+            <select name="categories" id="categories">
+                <option value="full-overview">All Categories</option>
+                <option value="overview">Five Top From All Categories</option>
+                <option value="combined-print-and-e-book-fiction">Combined Print and E-Book Fiction</option>
+                <option value="combined-print-and-e-book-nonfiction">Combined Print and E-Book Nonfiction</option>
+                <option value="hardcover-fiction">Harcover Fiction</option>
+                <option value="hardcover-nonfiction">Hardcover Nonfiction</option>
+                <option value="trade-fiction-paperback">Trade Fiction Paperback</option>
+                <option value="mass-market-paperback">Mass Market Paperback</option>
+                <option value="paperback-nonfiction">Paperback Nonfiction</option>
+                <option value="e-book-fiction">E-Book Fiction</option>
+                <option value="e-book-nonfiction">E-Book Nonfiction</option>
+                <option value="hardcover-advice">Hardcover Advice</option>
+                <option value="paperback-advice">Paperback Advice</option>
+                <option value="advice-how-to-and-miscellaneous">Advice, How-To, and Miscellaneous</option>
+                <option value="hardcover-graphic-books">Hardcover Graphic Books</option>
+                <option value="paperback-graphic-books">Paperback Graphic Books</option>
+                <option value="manga">Manga</option>
+                <option value="combined-print-fiction">Combined Print Fiction</option>
+                <option value="combined-print-nonfiction">Combined Print Nonfiction</option>
+                <option value="chapter-books">Chapter Books</option>
+                <option value="childrens-middle-grade">Childrens Middle Grade</option>
+                <option value="childrens-middle-grade-e-book">Childrens Middle Grade E-Book</option>
+                <option value="childrens-middle-grade-hardcover">Childrens Middle Grade Hardcover</option>
+                <option value="childrens-middle-grade-paperback">Children Middle Grade Paperback</option>
+                <option value="paperback-books">Paperback Books</option>
+                <option value="picture-books">Picture Books</option>
+                <option value="series-books">Series Books</option>
+                <option value="young-adult">Young Adult</option>
+                <option value="young-adult-e-book">Young Adult E-Book</option>
+                <option value="young-adult-hardcover">Young Adult Hardcover</option>
+                <option value="young-adult-paperback">Young Adult Paperback</option>
+                <option value="animals">Animals</option>
+                <option value="audio-fiction">Audio Fiction</option>
+                <option value="audio-nonfiction">Audio Nonfiction</option>
+                <option value="business-books">Business Books</option>
+                <option value="celebrities">Celebrities</option>
+                <option value="crime-and-punishment">Crime and Punishment</option>
+                <option value="culture">Culture</option>
+                <option value="education">Education</option>
+                <option value="espionage">Espionage</option>
+                <option value="expeditions-disasters-and-adventures">Expeditions, Disasters, and Adventures</option>
+                <option value="fashion-manners-and-customs">Fashion, Manners, and Customs</option>
+                <option value="food-and-fitness">Food and Fitness</option>
+                <option value="games-and-activities">Games and Activities</option>
+                <option value="graphic-books-and-manga">Graphic Books and Manga</option>
+                <option value="hardcover-business-books">Hardcover Business Books</option>
+                <option value="health">Health</option>
+                <option value="humor">Humor</option>
+                <option value="indigenous-americans">Indigenous Americans</option>
+                <option value="relationships">Relationships</option>
+                <option value="mass-market-monthly">Mass Market Monthly</option>
+                <option value="middle-grade-paperback-monthly">Middle Grade Paperback Monthly</option>
+                <option value="paperback-business-books">Paperback Business Books</option>
+                <option value="family">Family</option>
+                <option value="hardcover-political-books">Hardcover Political</option>
+                <option value="race-and-civil-rights">Race and Civil Rights</option>
+                <option value="religion-spirituality-and-faith">Religion, Spirituality, and Faith</option>
+                <option value="science">Science</option>
+                <option value="sports">Sports</option>
+                <option value="travel">Travel</option>
+                <option value="young-adult-paperback-monthly">Young Adult Paperback Monthly</option>
+            </select>
+
+        </div>
+
+        <!-- List of books shown -->
+        <div id="bookshelf" class="bookshelf">
+
+        </div>
+        
+    </body>
+
+    <script>
+
+        urllink = 'http://127.0.0.1:5000/'
+
+        function createExampleBook(imagesource,stars,link,title,author,publisher,description,isbn10,isbn13){
+            
+            //Stars
+            checkedstar=`<span class="fa fa-star checked star"></span>`;
+            uncheckedstar=`<span class="fa fa-star star"></span>`;
+            starholder=``;
+            for (var i = 1; i < 10; i++) {
+                if (i<=stars){
+                    starholder+=checkedstar
+                } else {
+                    starholder+=uncheckedstar
+                }
+            }
+
+            // Result
+            outputbook = `
+            <div class="holder bookholder">
+                <div><img src="${imagesource}"/></div>
+                <div class="bookinfo">
+                    <div class="starholder">${starholder}</div>
+                    <h1><a href="${link}">${title}</a></h1>
+                    <h2><span class="author">${author}</span> <span class="publisher">${publisher}</span></h2>
+                    <p>${description}</p>
+                    <div><button>Reviews</button><button>Rate</button><span class="isbn">${isbn10} ${isbn13}</span></div>
+                </div>
+            </div>
+            `
+            
+            return outputbook
+        }
+
+        const userAction = async () => {
+            
+            document.getElementById("bookshelf").innerHTML = `<div class="holder"><h1 class="loading">Loading...</h1></div>`;
+
+            const response = await fetch(urllink+'api/explore/',
+                {
+                    method: 'POST',
+                    body: JSON.stringify(
+                        {
+                            'page_number':0,
+                            'category':'hardcover-nonfiction'
+                        }
+                        ), // string or object
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+            
+            const returnedbooks = await response.json(); //extract JSON from the http response
+            console.log(returnedbooks)
+            document.getElementById("bookshelf").innerHTML = ``;
+            
+            // currentlyviewedbooks = ``;
+            for(index in returnedbooks){
+                book = returnedbooks[index]
+                console.log(book)
+                document.getElementById("bookshelf").innerHTML += createExampleBook(
+                    book["book_image"],
+                    5,
+                    book["amazon_product_url"],
+                    book["title"],
+                    book["author"],
+                    book["publisher"],
+                    book["description"],
+                    book["primary_isbn10"],
+                    book["primary_isbn13"]
+                )
+            }
+        }
+
+        async function getExplore(){
+            await userAction()
+        }
+
+        // Actually get books
+        getExplore()
+
+
+
+    </script>
+
+</html>
