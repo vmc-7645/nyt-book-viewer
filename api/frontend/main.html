@@ -526,7 +526,7 @@
                             'akey':getCookie("akey"),
                             'isbn':currentbookisbn,
                             'review_uname':reviewerid,
-                            'comment':"comment"+reviewerid
+                            'comment':document.getElementById("comment"+reviewerid).value
                         }
                     ),
                     headers: {
@@ -610,7 +610,7 @@
             selectedstar=`<span class="fa fa-star star" id="selectedstar"></span>`;
             starholder=`<div class="starholder selection">`;
             for (var i = 0; i < 10; i++) {
-                if (i==numberofstars){
+                if (i+1==numberofstars){
                     starholder+=selectedstar
                 } else {
                     starholder+=star
@@ -789,8 +789,33 @@
             // document.getElementById('acceptcookies').style = 'visibility: hidden;';
         }
 
+        const populateReviewList = async (isbn) => {
+            console.log(isbn)
+            const response = await fetch(urllink+'api/getbook/',
+                {
+                    method: 'POST',
+                    body: JSON.stringify(
+                        {
+                            'isbn':`${isbn}`
+                        }
+                    ),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+            
+            const bookresponse = await response.json(); 
+            
+
+            return createReviewList(bookresponse["reviews"])
+        }
+
         currentbookisbn = "";
-        function viewreviews(element){
+        async function viewreviews(element){
+            //TODO
+            document.getElementById('userreviews').innerHTML = await populateReviewList(element.id);
+
             document.getElementById('reviewviewer').style = 'visibility: visible;';
             console.log(element.id);
             currentbookisbn=element.id;

@@ -30,6 +30,8 @@ import nyt
 from timeout import timeout
 
 
+
+
 @timeout(5)
 def url_to_image(url):
     import urllib
@@ -468,6 +470,19 @@ app = Flask(__name__, template_folder='frontend')
 api = Api(app)
 cors = CORS(app, resources={r"/api/*": {"origins": "*"}})
 
+# Change json encoder to work with certain mongodb functionalities
+# Taken from https://stackoverflow.com/questions/65535560/typeerror-object-of-type-objectid-is-not-json-serializable
+import json
+from bson.json_util import ObjectId
+class MyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, ObjectId):
+            return str(obj)
+        return super(MyEncoder, self).default(obj)
+app.json_encoder = MyEncoder
+
+
+
 #####
 
 # Default route/test
@@ -649,18 +664,18 @@ def explore():
     
     return books
 
-# Explore
+# Get data for specific book in our own database
 @app.route('/api/getbook/', methods=['POST'])
 def getbook():
-    
+
     # Get data
     post_data = request.get_json()
 
     # page
     isbn = post_data['isbn']
-
-    # TODO GET BOOK, REVIEWS, AND COMMENTS FROM OUR DATABASE
-    return
+    book = bookexists(str(isbn))
+    print(book)
+    return jsonify(dict(book))
 
 # Rate a book
 @app.route('/api/rate/', methods=['POST'])
@@ -678,7 +693,7 @@ def rate():
     isbn   = post_data['isbn']
 
     # Action
-    review = post_data['review']
+    given_review = post_data['review']
     rating = post_data['rating']
 
     # If account action is authorized
@@ -696,7 +711,7 @@ def rate():
         try:
             for review in book_reviews:
                 if review['uname'] == uname:
-                    del(review['uname'])
+                    del(review)
         except:
             pass
         if type(book_reviews)==type(None):
@@ -705,7 +720,7 @@ def rate():
             {
                 'uname': uname,
                 'rating':rating,
-                'review':review,
+                'review':given_review,
                 'comments':[]
             }
         ]
