@@ -130,6 +130,7 @@
             background-color: white;
             border-radius: 2px;
             padding: 1rem;
+            margin-top: 1rem;
             box-shadow: 0px 1px 1px 1px rgb(144, 144, 144);
         }
         .username {
@@ -253,7 +254,7 @@
                     <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,10)"></span>
                 </div>
                 <br>
-                <button id="submitreview">Submit</button>
+                <button id="submitreview" onclick="addReview()">Submit</button>
             </div>
             <div id="userreviews" class="holder"></div>
         </div>
@@ -500,7 +501,7 @@
         async function addReview(){
             
             reviewAttemptReturn = await addReviewRunner();
-            if (response["type"]=="error"){
+            if (reviewAttemptReturn["type"]=="error"){
                 window.alert(`SERVER MESSAGE: ${reviewAttemptReturn["message"]}`);
                 return "Failure"
             }
@@ -516,7 +517,7 @@
         }
 
         const addCommentRunner = async (reviewerid) => {
-            const response = await fetch(urllink+'api/rate/',
+            const response = await fetch(urllink+'api/comment/',
                 {
                     method: 'POST',
                     body: JSON.stringify(
@@ -542,14 +543,13 @@
         async function addComment(element){
             
             commentAttemptReturn = await addCommentRunner(element.id)
-            if (response["type"]=="error"){
+            if (commentAttemptReturn["type"]=="error"){
                 window.alert(`SERVER MESSAGE: ${commentAttemptReturn["message"]}`);
                 return "Failure"
             }
 
-            newcomment = createComment(getCookie("uname"),"comment"+element.id) + element.innerHTML;
-            element.innerHTML = newcomment;
-
+            document.getElementById("comments"+element.id).innerHTML += createComment(getCookie("uname"),document.getElementById("comment"+element.id).value)
+            
             // Reset comment textarea
             document.getElementById("comment"+element.id).value = ""
 
@@ -671,8 +671,10 @@
                 <br>
                 <span class="username">${user}</span> 
                 <p>${content}</p>
-                <div class="commentsholder">
+                <div id="comments${user}" class="commentsholder">
                     ${createCommentList(comments)}
+                </div>
+                <div class="commentsholder">
                     <div class="addcomment">
                         <textarea id="comment${user}" placeholder="Add your own comment to the thread."></textarea>
                         <button id="${user}" onclick="addComment(this)">Add Comment</button>

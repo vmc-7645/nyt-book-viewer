@@ -125,8 +125,12 @@ pong
 		- [x] Must support create, read, update, delete operations
 	- [x] Comment system
 - [ ] Create UI
-	- [ ] End point username / password
+	- [x] End point username / password
 	- [ ] Allow searching the data source
 	- [ ] Allow rating system
-		- [ ] Must support create, read, update, delete operations
+		- [ ] Add
+    		- [ ] Bug where rating is show to be one more than it is in actuality
+		- [ ] Delete
+		- [ ] View
+		- [ ] Edit
 	- [ ] Comment system
