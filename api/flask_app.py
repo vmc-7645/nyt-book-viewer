@@ -235,6 +235,62 @@ def bookexists(
 
     return False
 
+def bookexistsfull(
+        term:str
+    ):
+    """
+    Determines if a book exists in our database or not.
+
+    Parameters
+    ----------
+    term (str): search term in string format
+
+    Return
+    ----------
+    Determines if an book exists already on our list
+    """
+
+    if len(term) <5:
+        return jsonify({'type':'error', 'message':'Search term too short.'})
+    elif len(term) >80:
+        return jsonify({'type':'error', 'message':'Search term too long.'})
+    # TODO clean search term
+
+    # Get the database
+    dbname = get_database()
+
+    # Get the collection
+    collection = dbname['books']
+
+    # 
+    bookstosend = []
+
+    # Get the books with isbn
+    books_with_name = collection.find({"title": {'$regex' : '.*' + term + '.*'}})
+    books_with_author = collection.find({"author": {'$regex' : '.*' + term + '.*'}})
+    books_with_isbn = collection.find({"primary_isbn13": {'$regex' : '.*' + term + '.*'}})
+    books_with_desc = collection.find({"description": {'$regex' : '.*' + term + '.*'}})
+    books_with_publisher = collection.find({"publisher": {'$regex' : '.*' + term + '.*'}})
+
+    # Convert the books to a list
+    for i in books_with_name:
+        bookstosend.append(i["fulldata"])
+    for i in books_with_author:
+        bookstosend.append(i["fulldata"])
+    for i in books_with_isbn:
+        bookstosend.append(i["fulldata"])
+    for i in books_with_desc:
+        bookstosend.append(i["fulldata"])
+    for i in books_with_publisher:
+        bookstosend.append(i["fulldata"])
+
+    # TODO remove duplicates
+
+    if len(bookstosend)!=0:
+        return bookstosend
+
+    return jsonify({'type':'error', 'message':'Book not found for search term.'})
+
 def unameexists(
         uname:str = ""
     ):
@@ -676,6 +732,20 @@ def getbook():
     book = bookexists(str(isbn))
     print(book)
     return jsonify(dict(book))
+
+# Search for books in our database
+@app.route('/api/search/', methods=['POST'])
+def search():
+
+    # Get data
+    post_data = request.get_json()
+
+    # page
+    searchterm = post_data['searchterm']
+
+    # Search for books with term 
+    books = bookexistsfull(searchterm)
+    return books
 
 # Rate a book
 @app.route('/api/rate/', methods=['POST'])

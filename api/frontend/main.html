@@ -18,7 +18,7 @@
             margin: 0%;
             font-family: 'Azeret Mono', monospace;
             font-family: 'Lunasima', sans-serif;
-            background-color: rgb(248, 248, 248);
+            background-color: rgb(243, 243, 243);
         }
 
         div.holder {
@@ -56,10 +56,12 @@
             border: none;
             background-color: rgb(244, 244, 244);
             box-shadow: 0px 1px 1px 1px rgb(144, 144, 144);
+            /* visibility: visible; */
         }
         button:hover {background-color: rgb(227, 227, 227);}
         button:active {background-color: rgb(243, 243, 243);
             box-shadow: 0px -1px 1px 1px rgb(144, 144, 144);}
+        button:disabled {visibility: hidden;}
 
         textarea {
             width: 99%;
@@ -190,7 +192,8 @@
         }
         .holder.bookholder div img {
             width: 100%;
-            border-radius: 5px;
+            border-radius: 8px;
+            box-shadow: 0px 1px 4px 1px rgb(144, 144, 144, 0.8);
         }
 
         .holder.bookholder .bookinfo {
@@ -259,17 +262,18 @@
             <div id="userreviews" class="holder"></div>
         </div>
         <div class="holder searchbar">
-            <p><span id="currentuser" class="username">Current Username</span></p>
+            <!-- <p><span id="currentuser" class="username">Current Username</span></p> -->
             <p>Search NYT Best Sellers</p>
-            <textarea placeholder="Title, Author, etc"></textarea>
-            <button>Search</button>
+            <textarea id="searchbar" placeholder="Title, Author, ISBN, etc"></textarea>
+            <button id="categorySearchButton" onclick="searchBooks()">Search</button>
             <select name="categories" id="categories">
-                <option value="full-overview">All Categories</option>
-                <option value="overview">Five Top From All Categories</option>
+                <!-- TODO: Allow for all categories. -->
+                <!-- <option value="full-overview">All Categories</option> -->
+                <!-- <option value="overview">Five Top From All Categories</option> -->
                 <option value="combined-print-and-e-book-fiction">Combined Print and E-Book Fiction</option>
                 <option value="combined-print-and-e-book-nonfiction">Combined Print and E-Book Nonfiction</option>
                 <option value="hardcover-fiction">Harcover Fiction</option>
-                <option value="hardcover-nonfiction">Hardcover Nonfiction</option>
+                <option value="hardcover-nonfiction"  selected="selected">Hardcover Nonfiction</option>
                 <option value="trade-fiction-paperback">Trade Fiction Paperback</option>
                 <option value="mass-market-paperback">Mass Market Paperback</option>
                 <option value="paperback-nonfiction">Paperback Nonfiction</option>
@@ -400,6 +404,10 @@
             ----------
             Authentication key is returned
             */
+            
+            document.getElementById("login").disabled = true;
+            setTimeout(function(){document.getElementById("login").disabled = false;},5000);
+
             uname = document.getElementById("unameinput").value;
             pword = document.getElementById("pwordinput").value;
             response = await loginRunner(uname,pword);
@@ -448,6 +456,10 @@
             ----------
             Authentication key is returned
             */
+
+            document.getElementById("signup").disabled = true;
+            setTimeout(function(){document.getElementById("signup").disabled = false;},5000);
+
             uname = document.getElementById("unameinput").value;
             pword = document.getElementById("pwordinput").value;
             response = await signupRunner(uname,pword);
@@ -471,6 +483,33 @@
 
             return "Success"
         }
+
+        // Explore Books Loader
+
+        pageNumber = 0
+        async function searchBooks(){
+            /*
+            Lookup list of books, displays it on user interface.
+
+            Parameters
+            ----------
+            none
+
+            Returns
+            ----------
+            none
+            */
+
+            document.getElementById("categorySearchButton").disabled = true;
+            setTimeout(function(){document.getElementById("categorySearchButton").disabled = false;},1000);
+           
+            categoryToGet = document.getElementById("categories").value;
+            await loadBooks(categoryToGet,0,document.getElementById("searchbar").value)
+            document.getElementById("searchbar").value = '';
+            pageNumber = 0
+
+            // TODO Integrate searchbar that allows for item llokup
+        }        
 
         // Review and Commenting System
 
@@ -499,6 +538,9 @@
         }
 
         async function addReview(){
+            
+            document.getElementById("submitreview").disabled = true;
+            setTimeout(function(){document.getElementById("submitreview").disabled = false;},5000);
             
             reviewAttemptReturn = await addReviewRunner();
             if (reviewAttemptReturn["type"]=="error"){
@@ -729,60 +771,99 @@
             return comments
         }
 
-        const initialLoad = async () => {
+        const loadBooks = async (category, pagenumber, searchterm) => {
+
             
             document.getElementById("bookshelf").innerHTML = `<div class="holder"><h1 class="loading">Loading...</h1></div>`;
-
-            const response = await fetch(urllink+'api/explore/',
-                {
-                    method: 'POST',
-                    body: JSON.stringify(
-                        {
-                            'page_number':0,
-                            'category':'hardcover-nonfiction'
+            if (searchterm.length>4){
+                const response = await fetch(urllink+'api/search/',
+                    {
+                        method: 'POST',
+                        body: JSON.stringify(
+                            {
+                                'searchterm':searchterm
+                            }
+                            ), // string or object
+                        headers: {
+                            'Content-Type': 'application/json',
                         }
-                        ), // string or object
-                    headers: {
-                        'Content-Type': 'application/json',
                     }
+                );
+                const returnedbooks = await response.json(); //extract JSON from the http response
+                console.log(returnedbooks)
+                document.getElementById("bookshelf").innerHTML = ``;
+
+                if (response==undefined){
+                    document.getElementById("bookshelf").innerHTML =`No books found`;
+                    return
                 }
-            );
-            
-            const returnedbooks = await response.json(); //extract JSON from the http response
-            console.log(returnedbooks)
-            document.getElementById("bookshelf").innerHTML = ``;
-            
-            // currentlyviewedbooks = ``;
-            for(index in returnedbooks){
-                book = returnedbooks[index]
-                console.log(book)
-                document.getElementById("bookshelf").innerHTML += createExampleBook(
-                    book["book_image"],
-                    book["amazon_product_url"],
-                    book["title"],
-                    book["author"],
-                    book["publisher"],
-                    book["description"],
-                    book["primary_isbn10"],
-                    book["primary_isbn13"]
-                )
+                
+                // currentlyviewedbooks = ``;
+                for(index in returnedbooks){
+                    book = returnedbooks[index]
+                    console.log(book)
+                    document.getElementById("bookshelf").innerHTML += createExampleBook(
+                        book["book_image"],
+                        book["amazon_product_url"],
+                        book["title"],
+                        book["author"],
+                        book["publisher"],
+                        book["description"],
+                        book["primary_isbn10"],
+                        book["primary_isbn13"]
+                    )
+                }
+            } else {
+                const response = await fetch(urllink+'api/explore/',
+                    {
+                        method: 'POST',
+                        body: JSON.stringify(
+                            {
+                                'page_number':pagenumber,
+                                'category':category
+                            }
+                            ), // string or object
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    }
+                );
+                const returnedbooks = await response.json(); //extract JSON from the http response
+                console.log(returnedbooks)
+                document.getElementById("bookshelf").innerHTML = ``;
+                
+                // currentlyviewedbooks = ``;
+                for(index in returnedbooks){
+                    book = returnedbooks[index]
+                    console.log(book)
+                    document.getElementById("bookshelf").innerHTML += createExampleBook(
+                        book["book_image"],
+                        book["amazon_product_url"],
+                        book["title"],
+                        book["author"],
+                        book["publisher"],
+                        book["description"],
+                        book["primary_isbn10"],
+                        book["primary_isbn13"]
+                    )
+                }
             }
         }
 
-        async function getExplore(){
-            await initialLoad()
+        async function initPage(){
+            await loadBooks('hardcover-nonfiction',0,'')
         }
 
         // Actually get books
-        getExplore()
+        initPage()
 
+        //Test
+        // document.getElementById("bookshelf").innerHTML = exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook;
+        
         // Test if user is logged in already, if so remove login screen
         if (getCookie("uname") != null){
             document.getElementById("loginviewer").style = "visibility: hidden;";
         }
-
-        // document.getElementById("bookshelf").innerHTML = exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook;
-        // document.getElementById("userreviews").innerHTML = createReview("Generic Username",3,"Generic reviews",[{"uname":"Name of User","comment":"content of comment posted"},{"uname":"Name of User","comment":"content of comment posted"},{"uname":"Name of User","comment":"content of comment posted"}])
 
         function hidereviews(element){
             document.getElementById('reviewviewer').style = 'visibility: hidden;';
@@ -813,10 +894,15 @@
 
         currentbookisbn = "";
         async function viewreviews(element){
-            //TODO
+            document.getElementById('reviewviewer').style = 'visibility: visible;';
+            
+            // // Check if current ISBN is element id, if so do nothing so as to save bandwidth
+            // if (currentbookisbn==element.id){
+            //     return
+            // }
+
             document.getElementById('userreviews').innerHTML = await populateReviewList(element.id);
 
-            document.getElementById('reviewviewer').style = 'visibility: visible;';
             console.log(element.id);
             currentbookisbn=element.id;
             // document.getElementById('acceptcookies').style = 'visibility: visible;';

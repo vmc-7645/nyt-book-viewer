@@ -44,6 +44,14 @@ Returns with response relating whether there was a successful login. Additionall
 
 Returns with response relating whether addition of rating occured or not.
 
+**Get Book**
+
+`/api/getbook/`
+
+- `isbn`: ISBN of book we're looking for
+
+Get book information from ISBN from our database.
+
 ## Review
 
 **Rate**
