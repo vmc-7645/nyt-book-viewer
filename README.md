@@ -52,6 +52,16 @@ Returns with response relating whether addition of rating occured or not.
 
 Get book information from ISBN from our database.
 
+**Search**
+
+`/api/search/`
+
+- `searchterm`: some string that might work
+
+Returns list of books
+
+[![Search results](https://img.youtube.com/vi/VKNAcAAdUHM/0.jpg)](https://www.youtube.com/watch?v=VKNAcAAdUHM)
+
 ## Review
 
 **Rate**
@@ -65,6 +75,8 @@ Get book information from ISBN from our database.
 - `rating`: integer between 1 and 10
 
 Returns with response relating whether addition of rating occured or not.
+
+[![Reviews and comments](https://img.youtube.com/vi/bMYikRrGt1I/0.jpg)](https://www.youtube.com/watch?v=bMYikRrGt1I)
 
 **Delete Rating**
 
@@ -89,6 +101,8 @@ Returns with response relating whether deletion of rating occured or not.
 - `comment`: comment content you are adding
 
 Returns with response relating whether deletion occured or not.
+
+[![Reviews and comments](https://img.youtube.com/vi/bMYikRrGt1I/0.jpg)](https://www.youtube.com/watch?v=bMYikRrGt1I)
 
 **Delete Comment**
 
