@@ -71,6 +71,12 @@
             box-shadow: 0px 1px 1px 1px rgb(144, 144, 144);
             padding-left:4px;
         }
+        textarea#reviewtextarea{
+            height:3rem;
+        }
+        .addcomment textarea{
+            height: 3rem;
+        }
         select {
             height:1.5rem;
             border-radius: 2px;
@@ -87,12 +93,59 @@
         .starholder {
             margin-top: 0.2rem;
         }
+
         .star {
-            font-size: 1.5rem;
-            text-shadow: 0px 2px 2px rgb(114, 114, 114);
-        }
-        .star.checked {
+            font-size: 1rem;
             color: orange;
+        }
+        .star#selectedstar ~ .star{
+            color: rgb(66, 66, 66);
+        }
+        
+        .starholder.selection {
+            background-color: rgb(255, 255, 255,0.9);
+        }
+
+        .starholder.selection .selectionstar {
+            color: orange;
+            cursor: pointer;
+        }
+
+        .starholder.selection .selectionstar#selectedstar ~.selectionstar {
+            color: rgb(66, 66, 66);
+            cursor: pointer;
+        }
+        .starholder.selection .selectionstar:hover {
+            /* color: rgb(66, 66, 66); */
+            text-shadow: 1px orange;
+            -webkit-text-stroke: 2px orange;
+            cursor: pointer;
+        }
+        .starholder.selection .selectionstar:hover ~.selectionstar {
+            color: rgb(66, 66, 66);
+            cursor: pointer;
+        }
+
+        .userreview {
+            background-color: white;
+            border-radius: 2px;
+            padding: 1rem;
+            box-shadow: 0px 1px 1px 1px rgb(144, 144, 144);
+        }
+        .username {
+            /* color: rgb(0, 0, 0); */
+            font-weight: 800;
+        }
+        .commentsholder {
+            padding-left: 2rem;
+        }
+        .comment {
+            border-left: 4px solid rgb(224, 224, 224);
+            padding-left: 4px;
+        }
+        .addcomment {
+            border-left: 4px solid rgb(224, 224, 224);
+            padding-left: 4px;
         }
 
         .holder {
@@ -104,16 +157,31 @@
         
 
         .holder.loginholder {
-            position: absolute;
+            overflow-y: scroll;
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             padding: 0%;
             margin: 0%;
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: rgba(255, 255, 255, 0.9);
             border:none;
             z-index: 1600;
+        }
+        .holder.reviewviewerholder{
+            overflow-y: scroll;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 0%;
+            margin: 0%;
+            background-color: rgba(255, 255, 255, 0.9);
+            border:none;
+            z-index: 1600;
+            visibility: hidden;
         }
         .holder.bookholder {
             display: grid;
@@ -146,21 +214,51 @@
             /* margin-right: 1rem; */
         }
 
+        .loginmessage{
+            color:red;
+        }
+
     </style>
     
     <body>
-        <!-- TODO -->
-        <!-- <div class="holder loginholder">
+        <div id="loginviewer" class="holder loginholder">
             <div class="login">
                 <p>Login or Signup</p>
-                <textarea id="uname" placeholder="Username"></textarea>
-                <textarea id="pword" placeholder="Password"></textarea>
-                <button id="login">Login</button>
-                <button id="signup">Signup</button>
+                <textarea id="unameinput" placeholder="Username"></textarea>
+                <textarea id="pwordinput" placeholder="Password"></textarea>
+                <button id="login" onclick="attemptLogin()">Login</button>
+                <button id="signup" onclick="attemptSignup()">Signup</button>
                 <p id="loginmessage"></p>
             </div>
-        </div> -->
+        </div>
+        <div id="reviewviewer" class="holder reviewviewerholder">
+            <div class="holder">
+                <p>Review Viewer</p>
+                <button onclick="hidereviews()">Close Review Viewer</button>
+                <p>Give your review:</p>
+
+                <textarea id="reviewtextarea" placeholder="Submit your review for this book here."></textarea>
+
+                <div class="starholder selection">
+                    <span>Select you rating:</span>
+                    <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,1)"></span>
+                    <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,2)"></span>
+                    <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,3)"></span>
+                    <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,4)"></span>
+                    <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,5)" id="selectedstar"></span>
+                    <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,6)"></span>
+                    <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,7)"></span>
+                    <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,8)"></span>
+                    <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,9)"></span>
+                    <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,10)"></span>
+                </div>
+                <br>
+                <button id="submitreview">Submit</button>
+            </div>
+            <div id="userreviews" class="holder"></div>
+        </div>
         <div class="holder searchbar">
+            <p><span id="currentuser" class="username">Current Username</span></p>
             <p>Search NYT Best Sellers</p>
             <textarea placeholder="Title, Author, etc"></textarea>
             <button>Search</button>
@@ -241,30 +339,254 @@
 
         urllink = 'http://127.0.0.1:5000/'
 
-        function createExampleBook(imagesource,stars,link,title,author,publisher,description,isbn10,isbn13){
-            
-            //Stars
-            checkedstar=`<span class="fa fa-star checked star"></span>`;
-            uncheckedstar=`<span class="fa fa-star star"></span>`;
-            starholder=``;
-            for (var i = 1; i < 10; i++) {
-                if (i<=stars){
-                    starholder+=checkedstar
-                } else {
-                    starholder+=uncheckedstar
+        exampleBook = `
+        <div class="holder bookholder">
+            <div><img src="https://storage.googleapis.com/du-prd/books/images/9780593236598.jpg"></div>
+            <div class="bookinfo">
+                <h1><a href="https://www.amazon.com/dp/0593236599?tag=NYTBSREV-20">OUTLIVE</a></h1>
+                <h2><span class="author">Peter Attia with Bill Gifford</span> <span class="publisher">Harmony</span></h2>
+                <p>A look at recent scientific research on aging and longevity.</p>
+                <div><button id="9780593236598" onclick="viewreviews(this)">Reviews and Ratings</button> <span class="isbn"> ISBN10:0593236599 ISBN13:9780593236598</span></div>
+            </div>
+        </div>
+        `;
+
+        // Cookie Management
+
+        function setCookie(key, value) {
+            var expires = new Date();
+            expires.setTime(expires.getTime() + (7 * 24 * 60 * 60 * 1000));
+            document.cookie = key + '=' + value + ';expires=' + expires.toUTCString();
+        }
+
+        function getCookie(key) {
+            var keyValue = document.cookie.match('(^|;) ?' + key + '=([^;]*)(;|$)');
+            return keyValue ? keyValue[2] : null;
+        }
+
+        // Login and Signup
+
+        const loginRunner = async (uname,pword) => {
+            const response = await fetch(urllink+'api/login/',
+                {
+                    method: 'POST',
+                    body: JSON.stringify(
+                        {
+                            'uname':uname,
+                            'pword':pword
+                        }
+                    ),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
                 }
+            );
+            
+            const loginresponse = await response.json(); //extract JSON from the http response
+            console.log(loginresponse)
+            return loginresponse
+        }
+        async function attemptLogin(){
+            /*
+            Attempt to login to an existing account
+            
+            Parameters
+            ----------
+            uname: username string
+            pword: password string
+            
+            Returns
+            ----------
+            Authentication key is returned
+            */
+            uname = document.getElementById("unameinput").value;
+            pword = document.getElementById("pwordinput").value;
+            response = await loginRunner(uname,pword);
+            if (response["type"]=="error"){
+                document.getElementById("loginmessage").innerHTML=`SERVER MESSAGE: ${response["message"]}`;
+                return "Failure"
+            }
+            setCookie("akey",response["key"]);
+            setCookie("uname",uname);
+            document.getElementById("loginviewer").style = "visibility: hidden;";
+
+            return "Success"
+        }
+
+        const signupRunner = async (uname,pword) => {
+            const response = await fetch(urllink+'api/signup/',
+                {
+                    method: 'POST',
+                    body: JSON.stringify(
+                        {
+                            'uname':uname,
+                            'pword':pword
+                        }
+                    ),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+            
+            const signupresponse = await response.json(); //extract JSON from the http response
+            console.log(signupresponse)
+            return signupresponse
+        }
+
+        async function attemptSignup(){
+            /*
+            Attempt to signup to an existing account
+            
+            Parameters
+            ----------
+            uname: username string
+            pword: password string
+            
+            Returns
+            ----------
+            Authentication key is returned
+            */
+            uname = document.getElementById("unameinput").value;
+            pword = document.getElementById("pwordinput").value;
+            response = await signupRunner(uname,pword);
+            if (response["type"]=="error"){
+                document.getElementById("loginmessage").innerHTML=`
+                
+                <p>SERVER MESSAGE: ${response["message"]}</p>
+                <ul>
+                    <li>The password should be between 8 and 20 characters in length.</li>
+                    <li>It should contain at least one uppercase letter.</li>
+                    <li>It should contain at least one lowercase letter.</li>
+                    <li>It should contain at least one digit.</li>
+                    <li>It may contain special characters, '-', '_' or '.'.</li>
+                </ul>
+                `;
+                return "Failure"
+            }
+            setCookie("akey",response["key"]);
+            setCookie("uname",uname);
+            document.getElementById("loginviewer").style = "visibility: hidden;";
+
+            return "Success"
+        }
+
+        // Review and Commenting System
+
+        const addReviewRunner = async () => {
+            const response = await fetch(urllink+'api/rate/',
+                {
+                    method: 'POST',
+                    body: JSON.stringify(
+                        {
+                            'uname':getCookie("uname"),
+                            'akey':getCookie("akey"),
+                            'isbn':currentbookisbn,
+                            'review':document.getElementById("reviewtextarea").value,
+                            'rating':ratingbyuser = currentratingselected
+                        }
+                    ),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+            
+            const signupresponse = await response.json(); //extract JSON from the http response
+            console.log(signupresponse)
+            return signupresponse
+        }
+
+        async function addReview(){
+            
+            reviewAttemptReturn = await addReviewRunner();
+            if (response["type"]=="error"){
+                window.alert(`SERVER MESSAGE: ${reviewAttemptReturn["message"]}`);
+                return "Failure"
             }
 
-            // Result
+            newreviews = createReview(getCookie("uname"),currentratingselected,document.getElementById("reviewtextarea").value,[]) + document.getElementById("userreviews").innerHTML;
+            document.getElementById("userreviews").innerHTML = newreviews;
+
+            // Reset text area
+            document.getElementById("reviewtextarea").value = ""
+
+            return "Success"
+
+        }
+
+        const addCommentRunner = async (reviewerid) => {
+            const response = await fetch(urllink+'api/rate/',
+                {
+                    method: 'POST',
+                    body: JSON.stringify(
+                        {
+                            'uname':getCookie("uname"),
+                            'akey':getCookie("akey"),
+                            'isbn':currentbookisbn,
+                            'review_uname':reviewerid,
+                            'comment':"comment"+reviewerid
+                        }
+                    ),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+            
+            const signupresponse = await response.json(); //extract JSON from the http response
+            console.log(signupresponse)
+            return signupresponse
+        }
+
+        async function addComment(element){
+            
+            commentAttemptReturn = await addCommentRunner(element.id)
+            if (response["type"]=="error"){
+                window.alert(`SERVER MESSAGE: ${commentAttemptReturn["message"]}`);
+                return "Failure"
+            }
+
+            newcomment = createComment(getCookie("uname"),"comment"+element.id) + element.innerHTML;
+            element.innerHTML = newcomment;
+
+            // Reset comment textarea
+            document.getElementById("comment"+element.id).value = ""
+
+            return "Success"
+
+        }
+
+        // Content Management
+
+        function createExampleBook(imagesource,link,title,author,publisher,description,isbn10,isbn13){
+            /*
+            Generates HTML for book to be displayed on explore page.
+
+            Parameters
+            ----------
+            imagesource: source for image to be displayed
+            link: amazon url
+            title: book title
+            author: string of author who wrote book
+            publisher: string of publisher
+            description: string with desciption of book
+            isbn10: isbn 10 code for book
+            isbn13: isbn 10 code for book
+
+            Returns
+            ----------
+            HTML of book
+
+            */
             outputbook = `
             <div class="holder bookholder">
                 <div><img src="${imagesource}"/></div>
                 <div class="bookinfo">
-                    <div class="starholder">${starholder}</div>
                     <h1><a href="${link}">${title}</a></h1>
                     <h2><span class="author">${author}</span> <span class="publisher">${publisher}</span></h2>
                     <p>${description}</p>
-                    <div><button>Reviews</button><button>Rate</button><span class="isbn">${isbn10} ${isbn13}</span></div>
+                    <div><button id="${isbn13}" onclick="viewreviews(this)">Reviews and Ratings</button> <span class="isbn"> ISBN10:${isbn10} ISBN13:${isbn13}</span></div>
                 </div>
             </div>
             `
@@ -272,7 +594,140 @@
             return outputbook
         }
 
-        const userAction = async () => {
+        function createStagnantStars(numberofstars){
+            /*
+            Generates HTML for n/10 stars to be displayed.
+
+            Parameters
+            ----------
+            numberofstars: integer 1-10
+
+            Returns
+            ----------
+            HTML of stars
+            */
+            star=`<span class="fa fa-star star"></span>`;
+            selectedstar=`<span class="fa fa-star star" id="selectedstar"></span>`;
+            starholder=`<div class="starholder selection">`;
+            for (var i = 0; i < 10; i++) {
+                if (i==numberofstars){
+                    starholder+=selectedstar
+                } else {
+                    starholder+=star
+                }
+            }
+            return starholder+`</div>`;
+        }
+
+        function createReviewList(usersandreviews){
+            /*
+            
+            Parameters
+            ----------
+            usersandreviews: 
+                [
+                    {
+                        "uname":"username"
+                        "rating":number of stars user gave to book 1-10
+                        "review":"review contents"
+                        "comments":
+                        [
+                            *comments*
+                        ]
+                    }
+                ]
+            */
+            
+            reviews=``;
+            for (index in usersandreviews){
+                ureview = usersandreviews[index];
+                reviews += createReview(ureview["uname"],ureview["rating"],ureview["review"],ureview["comments"]);
+            }
+            return reviews
+
+        }
+
+        function createReview(user,stars,content,comments){
+            /*
+            Creates contents for a review.
+
+            Parameters
+            ----------
+            user: person who wrote review
+            stars: number of stars given to book from review
+            content: content of review
+            comments: list of comments in format of:
+                [
+                    {"uname":"username","comment":"content of comment"}
+                ]
+
+            Returns
+            ----------
+            HTML for a single review
+            */
+            review = `
+            <div class="userreview">
+                ${createStagnantStars(stars)}
+                <br>
+                <span class="username">${user}</span> 
+                <p>${content}</p>
+                <div class="commentsholder">
+                    ${createCommentList(comments)}
+                    <div class="addcomment">
+                        <textarea id="comment${user}" placeholder="Add your own comment to the thread."></textarea>
+                        <button id="${user}" onclick="addComment(this)">Add Comment</button>
+                    </div>
+                </div>
+            </div>
+            `;
+            return review
+        }
+
+        function createComment(user,content){
+            /*
+            Generates HTML for a single comment.
+
+            Parameters
+            ----------
+            user: username to be displayed
+            content: content of users review
+
+            Returns
+            ----------
+            HTML of comment to be displayed
+            */
+            comment = `
+            <div class="comment">
+                <span class="username">${user}</span>
+                <p>${content}</p>
+            </div>`;
+            return comment
+        }
+
+        function createCommentList(usersandcomments){
+            /*
+            Generates HTML for a multiple comments.
+
+            Parameters
+            ----------
+            usersandcomments: list of comments in format of:
+                [
+                    {"uname":"username","comment":"content of comment"}
+                ]
+
+            Returns
+            ----------
+            HTML of comment(s) to be displayed
+            */
+            comments=``;
+            for (index in usersandcomments){
+                uc = usersandcomments[index];
+                comments += createComment(uc["uname"],uc["comment"]);
+            }
+            return comments
+        }
+
+        const initialLoad = async () => {
             
             document.getElementById("bookshelf").innerHTML = `<div class="holder"><h1 class="loading">Loading...</h1></div>`;
 
@@ -301,7 +756,6 @@
                 console.log(book)
                 document.getElementById("bookshelf").innerHTML += createExampleBook(
                     book["book_image"],
-                    5,
                     book["amazon_product_url"],
                     book["title"],
                     book["author"],
@@ -314,11 +768,39 @@
         }
 
         async function getExplore(){
-            await userAction()
+            await initialLoad()
         }
 
         // Actually get books
         getExplore()
+
+        // Test if user is logged in already, if so remove login screen
+        if (getCookie("uname") != null){
+            document.getElementById("loginviewer").style = "visibility: hidden;";
+        }
+
+        // document.getElementById("bookshelf").innerHTML = exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook;
+        // document.getElementById("userreviews").innerHTML = createReview("Generic Username",3,"Generic reviews",[{"uname":"Name of User","comment":"content of comment posted"},{"uname":"Name of User","comment":"content of comment posted"},{"uname":"Name of User","comment":"content of comment posted"}])
+
+        function hidereviews(element){
+            document.getElementById('reviewviewer').style = 'visibility: hidden;';
+            // document.getElementById('acceptcookies').style = 'visibility: hidden;';
+        }
+
+        currentbookisbn = "";
+        function viewreviews(element){
+            document.getElementById('reviewviewer').style = 'visibility: visible;';
+            console.log(element.id);
+            currentbookisbn=element.id;
+            // document.getElementById('acceptcookies').style = 'visibility: visible;';
+        }
+
+        currentratingselected = 0;
+        function rateselectedfromstar(element, ratingnumber){
+            document.getElementById("selectedstar").id = "";
+            element.id="selectedstar";
+            currentratingselected=ratingnumber;
+        }
 
 
 

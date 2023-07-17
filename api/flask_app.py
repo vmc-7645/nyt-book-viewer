@@ -98,7 +98,7 @@ def is_valid_uname(
     ----------
     boolean that is true if input string is a valid username
     """
-    return bool(match(r"^[a-zA-Z0-9_.-]{5,20}$"), uname)
+    return bool(match(r"^[a-zA-Z0-9_.-]{5,20}$", uname))
 
 def is_valid_password(
         pword:str=""
@@ -187,7 +187,7 @@ def get_database():
 
     Return
     ----------
-    connection TODO
+    connection
     """
     
     # Provide the mongodb atlas url to connect python to mongodb using pymongo EX: CONNECTION_STRING = "mongodb+srv://<username>:<password>@<cluster-name>.mongodb.net/<database-name>"
@@ -648,6 +648,19 @@ def explore():
             )
     
     return books
+
+# Explore
+@app.route('/api/getbook/', methods=['POST'])
+def getbook():
+    
+    # Get data
+    post_data = request.get_json()
+
+    # page
+    isbn = post_data['isbn']
+
+    # TODO GET BOOK, REVIEWS, AND COMMENTS FROM OUR DATABASE
+    return
 
 # Rate a book
 @app.route('/api/rate/', methods=['POST'])
