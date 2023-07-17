@@ -715,24 +715,26 @@ def rate():
             book_reviews=[]
         else:
             for review in book_reviews:
+                if type(review)==str:
+                    del(review)
+                    continue
                 if review['uname'] == uname:
                     print("Review removed")
                     review_found == True
                     del(review)
                 else:
-                    book_reviews_tosend+=review
+                    book_reviews_tosend.append(review)
         
         if not review_found:
             num_reviews = book['num_reviews']+1
         
-        book_reviews = book_reviews_tosend + [
-            {
+        book_reviews_tosend.append({
                 'uname': uname,
                 'rating': rating,
                 'review': given_review,
                 'comments':[]
-            }
-        ]
+            })
+        
     
         try:
             totalscoreundivided = sum([int(i['rating']) for i in book['reviews']])
@@ -746,7 +748,7 @@ def rate():
                 "$set":{
                     "num_reviews":int(num_reviews),
                     "rating":int(totalscoreundivided/int(num_reviews)),
-                    "reviews":book_reviews
+                    "reviews":book_reviews_tosend
                 }
             }
         )
@@ -817,7 +819,7 @@ def comment():
     
     # Get data
     post_data = request.get_json()
-    print(post_data)
+    print("POST DATA ::: "+str(post_data))
 
     # User information
     uname  = post_data['uname']
@@ -836,34 +838,52 @@ def comment():
     # If book exists on our database, add comment
     book = bookexists(isbn)
     if book:
+        print("BOOK EXISTS")
 
         book_reviews = book['reviews']
+        book_reviews_tosend = []
+
+        # print(book_reviews)
         # print(book)
 
         if type(book_reviews) != type(None):
-            for index, review in enumerate(book_reviews):
-                if review['uname'] == review_uname:
-                    print(review)
-                    # Update authorized keys
-                    dbname = get_database()
-                    # Update comments
-                    book_reviews[index]["comments"].append(
-                        {
-                            "uname":uname,
-                            "comment":comment
-                        }
-                    )
-                    dbname.books.update_one(
-                        {"isbn":isbn},
-                        {
-                            "$set":{
-                                "reviews":book_reviews
-                            }
-                        }
-                    )
+            for review in book_reviews:
+                print("REVIEW NUM:::"+str(index))
+                if type(review) == str:
+                    print("REVIEW IS STRING:::"+review)
+                    del(review)
+                    continue
+                elif review['uname'] == review_uname:
+                    print("PREEDIT REVIEW :::::"+str(review))
+                    comments = review["comments"]
+                    comments_to_send = []
 
-                    return jsonify({'type':'success','message':'Comment posted.'})
-            return jsonify({'type':'error','message':'Comment not posted. Reviews found but not review needed for comment.'})
+                    for commentincomments in comments:
+                        if str(commentincomments)==str:
+                            continue
+                        comments_to_send.append(commentincomments)
+                    
+                    comments_to_send.append({"uname":uname, "comment":comment})
+                    review["comments"]=comments_to_send
+                    
+                    book_reviews_tosend.append(review)
+                else:
+                    book_reviews_tosend.append(review)
+                print("REVIEW:::::"+str(review))
+            
+            print("REVIEWS BEING SENT -----------------------\n"+str(book_reviews_tosend))
+            dbname = get_database()
+            dbname.books.update_one(
+                {"isbn":isbn},
+                {
+                    "$set":{
+                        "reviews":book_reviews_tosend
+                    }
+                }
+            )
+
+            return jsonify({'type':'success','message':'Comment posted.'})
+            # return jsonify({'type':'error','message':'Comment not posted. Reviews found but not review needed for comment.'})
         return jsonify({'type':'error','message':'Comment not posted. No reviews were found.'})
 
     # If book does not exist
