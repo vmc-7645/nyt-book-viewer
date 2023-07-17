@@ -266,11 +266,11 @@ def bookexistsfull(
     bookstosend = []
 
     # Get the books with isbn
-    books_with_name = collection.find({"title": {'$regex' : '.*' + term + '.*'}})
+    books_with_name = collection.find({"name": {'$regex' : '.*' + term + '.*'}})
     books_with_author = collection.find({"author": {'$regex' : '.*' + term + '.*'}})
-    books_with_isbn = collection.find({"primary_isbn13": {'$regex' : '.*' + term + '.*'}})
-    books_with_desc = collection.find({"description": {'$regex' : '.*' + term + '.*'}})
-    books_with_publisher = collection.find({"publisher": {'$regex' : '.*' + term + '.*'}})
+    books_with_isbn = collection.find({"isbn": {'$regex' : '.*' + term + '.*'}})
+    books_with_desc = collection.find({"fulldata.description": {'$regex' : '.*' + term + '.*'}})
+    books_with_publisher = collection.find({"fulldata.publisher": {'$regex' : '.*' + term + '.*'}})
 
     # Convert the books to a list
     for i in books_with_name:

@@ -264,7 +264,7 @@
         <div class="holder searchbar">
             <!-- <p><span id="currentuser" class="username">Current Username</span></p> -->
             <p>Search NYT Best Sellers</p>
-            <textarea id="searchbar" placeholder="Title, Author, ISBN, etc"></textarea>
+            <textarea id="searchbar" placeholder="TITLE, Author, ISBN, etc"></textarea>
             <button id="categorySearchButton" onclick="searchBooks()">Search</button>
             <select name="categories" id="categories">
                 <!-- TODO: Allow for all categories. -->
@@ -793,8 +793,8 @@
                 console.log(returnedbooks)
                 document.getElementById("bookshelf").innerHTML = ``;
 
-                if (response==undefined){
-                    document.getElementById("bookshelf").innerHTML =`No books found`;
+                if (returnedbooks["type"]=="error"){
+                    document.getElementById("bookshelf").innerHTML = `<div class="holder"><h1 class="loading">${returnedbooks["message"]}</h1></div>`;
                     return
                 }
                 
