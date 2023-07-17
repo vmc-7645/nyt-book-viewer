@@ -706,30 +706,39 @@ def rate():
     if book:
         dbname = get_database()
 
-        num_reviews = book['num_reviews']+1
         book_reviews = book['reviews']
-        try:
-            for review in book_reviews:
-                if review['uname'] == uname:
-                    del(review)
-        except:
-            pass
+        book_reviews_tosend = []
+
+        review_found = False
+        
         if type(book_reviews)==type(None):
             book_reviews=[]
-        book_reviews = book_reviews+[
+        else:
+            for review in book_reviews:
+                if review['uname'] == uname:
+                    print("Review removed")
+                    review_found == True
+                    del(review)
+                else:
+                    book_reviews_tosend+=review
+        
+        if not review_found:
+            num_reviews = book['num_reviews']+1
+        
+        book_reviews = book_reviews_tosend + [
             {
                 'uname': uname,
-                'rating':rating,
-                'review':given_review,
+                'rating': rating,
+                'review': given_review,
                 'comments':[]
             }
         ]
     
         try:
-            totalscoreundivided =sum([int(i['rating']) for i in book['reviews']])
+            totalscoreundivided = sum([int(i['rating']) for i in book['reviews']])
         except:
-            totalscoreundivided=rating
-        print(book_reviews)
+            totalscoreundivided = rating
+        # print(book_reviews)
         # Update authorized keys
         dbname.books.update_one(
             {"isbn":isbn},

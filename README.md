@@ -116,21 +116,39 @@ Returns with response relating whether success occured or not.
 pong
 
 
+# Setup
+
+Setup the device by getting the respective api keys for your MongoDB Cloud Atlas database (`mongo.key`) and NYT Best Sellers API (`nyt.key`) and placing them into the `api` folder.
+
+Ensure that MongoDB can connect to your service by adding the services IP address to the MongoDB Cloud Atlas Network Atlas list.
+
+Run test environment (non-production) with `py -3 -m flask_app`. Or run in production with normal production setup process.
+
 # TODO
 
 - [ ] Create API
 	- [x] End point username / password
 	- [ ] Allow searching the data source
 	- [x] Allow rating system
-		- [x] Must support create, read, update, delete operations
+		- [x] Add
+		- [ ] Delete
+		- [x] View
+		- [x] Edit
 	- [x] Comment system
+		- [x] Add
+		- [ ] Delete
+		- [x] View
+		- [ ] Edit
 - [ ] Create UI
 	- [x] End point username / password
 	- [ ] Allow searching the data source
 	- [ ] Allow rating system
-		- [ ] Add
-    		- [ ] Bug where rating is show to be one more than it is in actuality
+		- [x] Add
 		- [ ] Delete
-		- [ ] View
-		- [ ] Edit
+		- [x] View
+		- [x] Edit
 	- [ ] Comment system
+		- [x] Add
+		- [ ] Delete
+		- [x] View
+		- [ ] Edit
