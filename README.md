@@ -1,17 +1,18 @@
 # nyt-book-viewer
 
-View NYT Bestsellers
-
 [![Example of the page once the user has logged in and is viewing the books.](image.png)](https://waveplatform.pythonanywhere.com/main/)
 
 Flask is used to serve all REST API requests, additionally it also serves the user interface.
 
 All user data is stored on MongoDB Cloud Atlas and all book information is gathered from the NYT API. In order to run locally you need both a `mongo.key` and `nyt.key` file with their respective API keys in the `api` folder.
 
+Created namely for CoSchedule Coding Challenge V3.
+
+[View NYT Bestsellers on the Demo.](https://waveplatform.pythonanywhere.com/main/)
 
 # API
 
-Below is a short description of the API used.
+Below is a short description of the API.
 
 ## Auth
 
@@ -92,6 +93,10 @@ Returns with response relating whether addition of rating occured or not.
 
 Returns with response relating whether deletion of rating occured or not.
 
+*VIDEO DEMO:*
+
+[![Delete reviews and comments](https://img.youtube.com/vi/666bQSWaXXU/0.jpg)](https://www.youtube.com/watch?v=666bQSWaXXU)
+
 ## Comment
 
 **Comment**
@@ -121,6 +126,10 @@ Returns with response relating whether deletion occured or not.
 - `comment`: comment content you are deleting
 
 Returns with response relating whether deletion occured or not.
+
+*VIDEO DEMO:*
+
+[![Delete reviews and comments](https://img.youtube.com/vi/666bQSWaXXU/0.jpg)](https://www.youtube.com/watch?v=666bQSWaXXU)
 
 **Alter Comment**
 
@@ -156,7 +165,9 @@ I currently have a slightly modified version of the flask code running on a prem
 
 # TODO
 
-- [ ] Create API
+## Basic
+
+- [x] Create API
 	- [x] End point username / password
 	- [x] Allow searching the data source
 	- [x] Allow rating system
@@ -165,11 +176,7 @@ I currently have a slightly modified version of the flask code running on a prem
 		- [x] View
 		- [x] Edit
 	- [x] Comment system
-		- [x] Add
-		- [x] Delete
-		- [x] View
-		- [x] Edit
-- [ ] Create UI
+- [x] Create UI
 	- [x] End point username / password
 	- [x] Allow searching the data source
 	- [x] Allow rating system
@@ -177,8 +184,15 @@ I currently have a slightly modified version of the flask code running on a prem
 		- [x] Delete
 		- [x] View
 		- [x] Edit
-	- [ ] Comment system
-		- [x] Add
-		- [x] Delete
-		- [x] View
-		- [ ] Edit
+	- [x] Comment system
+
+## Extra
+
+- [ ] API
+  - [x] Cloud hosting
+    - [x] MongoDB Cloud Atlas for Database
+    - [x] PythonAnywhere for Flask Service
+  - [ ] Optimization
+- [ ] UI
+  - [ ] Optimization
+  - [ ] Better Styling
