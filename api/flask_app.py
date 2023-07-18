@@ -250,7 +250,7 @@ def bookexistsfull(
     Determines if an book exists already on our list
     """
 
-    if len(term) <5:
+    if len(term) <3:
         return jsonify({'type':'error', 'message':'Search term too short.'})
     elif len(term) >80:
         return jsonify({'type':'error', 'message':'Search term too long.'})
@@ -858,11 +858,12 @@ def deleterating():
         num_reviews = book['num_reviews']-1
         book_reviews = book['reviews']
         
+        reviews_to_save = []
         for review in book_reviews:
-            if review['uname'] == uname:
-                del(review['uname'])
+            if review['uname'] != uname:
+                reviews_to_save.append(review)
         
-        totalscoreundivided =sum([int(i['rating']) for i in book['reviews']])
+        totalscoreundivided = sum([int(i['rating']) for i in book['reviews']])
         
         # Update authorized keys
         dbname.books.update_one(
@@ -870,8 +871,8 @@ def deleterating():
             {
                 "$set":{
                     "num_reviews":int(num_reviews),
-                    "rating":int(totalscoreundivided/int(num_reviews)),
-                    "reviews":book_reviews
+                    "rating":int(totalscoreundivided/int(num_reviews if num_reviews > 0 else 1)),
+                    "reviews":reviews_to_save
                 }
             }
         )
@@ -973,8 +974,7 @@ def deletecomment():
 
     # Book and post
     isbn   = post_data['isbn']
-    review_uname  = post_data['review_uname']
-    comment = post_data['comment']
+    comment = post_data['content']
 
     # If account action is authorized
     authorized = auth_action(uname,akey)
@@ -983,33 +983,35 @@ def deletecomment():
     
     # If book exists on our database, add comment
     book = bookexists(isbn)
-    review = book["uname"]
     if book:
 
         book_reviews = book['reviews']
+        book_reviews_tosave = []
 
         for review in book_reviews:
-            if review['uname'] == review_uname:
-                for comment in review['uname']['comments']:
+            if review['uname'] == uname:
+
+                comments_to_keep = []
+                for comment in review['comments']:
+                    comments_to_keep = []
                     if comment['uname'] == uname and comment['comment'] == comment:
-                        
-                        # Removes comment
-                        del(comment)
+                        print("REMOVED COMMENT : "+str(comment))
+                    else:
+                        comments_to_keep.append(comment)
+                review["comments"]=comments_to_keep
+                book_reviews_tosave.append(review)
+            else:
+                book_reviews_tosave.append(review)
 
-                        # Update authorized keys
-                        dbname = get_database()
-                        dbname.books.update_one(
-                            {"isbn":isbn},
-                            {
-                                "$set":{
-                                    "reviews":book_reviews
-                                }
-                            }
-                        )
-                        return jsonify({'type':'success','message':'Comment deleted.'})
-
-                return jsonify({'type':'error','message':'Comment not deleted despite review it was under being found.'})
-        
+            dbname = get_database()
+            dbname.books.update_one(
+                {"isbn":isbn},
+                {
+                    "$set":{
+                        "reviews":book_reviews_tosave
+                    }
+                }
+            )
         return jsonify({'type':'error','message':'Comment not deleted. Review not found.'})
 
     # If book does not exist

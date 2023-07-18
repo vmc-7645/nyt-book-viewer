@@ -138,9 +138,14 @@ def bookexists(
     ----------
     bool: true if book exists.
     """
-    exists = bool((json.loads(requests.get(f"https://api.nytimes.com/svc/books/v3/reviews.json?isbn={isbn}&api-key={key}").content)["num_results"])>=0)
-    return exists
+    
 
+    link = requests.get(f"https://api.nytimes.com/svc/books/v3/reviews.json?isbn={isbn}&api-key={key}").content
+    print(link)
+    exists = bool((json.loads(link)["num_results"])>=0)
+    
+    return exists
+    
 
 
 if __name__ == '__main__':

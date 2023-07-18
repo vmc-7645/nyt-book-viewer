@@ -244,7 +244,7 @@
                 <textarea id="reviewtextarea" placeholder="Submit your review for this book here. Submitting again will edit previous review to match."></textarea>
 
                 <div class="starholder selection">
-                    <span>Select you rating:</span>
+                    <span>Select your rating:</span>
                     <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,1)" id="selectedstar"></span>
                     <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,2)"></span>
                     <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,3)"></span>
@@ -707,11 +707,15 @@
             ----------
             HTML for a single review
             */
+            btn = ``;
+            if (user == getCookie("uname")) {
+                btn = `<button onclick="deleteReview(this)">Delete</button>`;
+            }
             review = `
             <div class="userreview">
                 ${createStagnantStars(stars)}
                 <br>
-                <span class="username">${user}</span> 
+                <span class="username">${user}</span> ${btn}
                 <p>${content}</p>
                 <div id="comments${user}" class="commentsholder">
                     ${createCommentList(comments)}
@@ -727,6 +731,33 @@
             return review
         }
 
+        const deleteReviewAction = async () => {
+            const response = await fetch(urllink+'api/deleterating/',
+                {
+                    method: 'POST',
+                    body: JSON.stringify(
+                        {
+                            'uname':getCookie("uname"),
+                            'akey':getCookie("akey"),
+                            'isbn':currentbookisbn
+                        }
+                    ),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+            const bookresponse = await response.json();
+
+        }
+
+        async function deleteReview(){
+            /*
+            Delete review
+            */
+            await deleteReviewAction();
+        }
+
         function createComment(user,content){
             /*
             Generates HTML for a single comment.
@@ -740,12 +771,43 @@
             ----------
             HTML of comment to be displayed
             */
+            btn = ``;
+            if (user ==getCookie("uname")) {
+                btn = `<button id="${content}" onclick="deleteComment(this)">Delete</button>`;
+            }
             comment = `
             <div class="comment">
-                <span class="username">${user}</span>
+                <span class="username">${user}</span> ${btn}
                 <p>${content}</p>
             </div>`;
             return comment
+        }
+
+        const deleteCommentAction = async (contentOfComment) => {
+            const response = await fetch(urllink+'api/deletecomment/',
+                {
+                    method: 'POST',
+                    body: JSON.stringify(
+                        {
+                            'uname':getCookie("uname"),
+                            'akey':getCookie("akey"),
+                            'isbn':currentbookisbn,
+                            'content':contentOfComment
+                        }
+                    ),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                }
+            );
+            const bookresponse = await response.json();
+        }
+
+        async function deleteComment(element){
+            /*
+            Remove comment
+            */
+            await deleteCommentAction(element.id);
         }
 
         function createCommentList(usersandcomments){
@@ -775,7 +837,7 @@
 
             
             document.getElementById("bookshelf").innerHTML = `<div class="holder"><h1 class="loading">Loading...</h1></div>`;
-            if (searchterm.length>4){
+            if (searchterm.length>2){
                 const response = await fetch(urllink+'api/search/',
                     {
                         method: 'POST',
@@ -855,10 +917,10 @@
         }
 
         // Actually get books
-        initPage()
+        // initPage()
 
         //Test
-        // document.getElementById("bookshelf").innerHTML = exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook;
+        document.getElementById("bookshelf").innerHTML = exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook;
         
         // Test if user is logged in already, if so remove login screen
         if (getCookie("uname") != null){

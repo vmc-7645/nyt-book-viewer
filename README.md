@@ -60,6 +60,8 @@ Get book information from ISBN from our database.
 
 Returns list of books
 
+*VIDEO DEMO:*
+
 [![Search results](https://img.youtube.com/vi/VKNAcAAdUHM/0.jpg)](https://www.youtube.com/watch?v=VKNAcAAdUHM)
 
 ## Review
@@ -75,6 +77,8 @@ Returns list of books
 - `rating`: integer between 1 and 10
 
 Returns with response relating whether addition of rating occured or not.
+
+*VIDEO DEMO:*
 
 [![Reviews and comments](https://img.youtube.com/vi/bMYikRrGt1I/0.jpg)](https://www.youtube.com/watch?v=bMYikRrGt1I)
 
@@ -101,6 +105,8 @@ Returns with response relating whether deletion of rating occured or not.
 - `comment`: comment content you are adding
 
 Returns with response relating whether deletion occured or not.
+
+*VIDEO DEMO:*
 
 [![Reviews and comments](https://img.youtube.com/vi/bMYikRrGt1I/0.jpg)](https://www.youtube.com/watch?v=bMYikRrGt1I)
 
