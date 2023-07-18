@@ -152,6 +152,8 @@ Ensure that MongoDB can connect to your service by adding the services IP addres
 
 Run test environment (non-production) with `py -3 -m flask_app`. Or run in production with normal production setup process.
 
+I currently have a slightly modified version of the flask code running on a premium PythonAnywhere account: [link to website](https://waveplatform.pythonanywhere.com/main/).
+
 # TODO
 
 - [ ] Create API

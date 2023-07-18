@@ -842,7 +842,7 @@
         // Actually get books
         initPage()
 
-        //Test
+        // Test
         // document.getElementById("bookshelf").innerHTML = exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook;
         
         // Test if user is logged in already, if so remove login screen
@@ -874,7 +874,7 @@
             currentbookisbn=element.id;
         }
 
-        currentratingselected = 0;
+        currentratingselected = 1; // 1 because 0 is not valid as a default input for a book review
         function rateselectedfromstar(element, ratingnumber){
             document.getElementById("selectedstar").id = "";
             element.id="selectedstar";

@@ -1,6 +1,11 @@
 """
-
+Flask API
 """
+
+# # Used in PythonAnywhere for demo, not that sys.path.append should not be used in production circumstances and should be replaced with proper referencing.
+# relativepath="/path/to/this/"
+# import sys
+# sys.path.append(relativepath)
 
 # Imports Section
 
@@ -63,7 +68,6 @@ def getkey(loc:str=".key"):
             data = file.read().rstrip()
             return data
     except:
-        # TODO add error message
         return False
 
 # String processing
@@ -281,7 +285,7 @@ def bookexistsfull(
     for i in books_with_publisher:
         bookstosend.append(i["fulldata"])
 
-    # TODO remove duplicates
+    # TODO remove duplicates with same ISBN code
 
     if len(bookstosend)!=0:
         return bookstosend
@@ -541,11 +545,11 @@ app.json_encoder = MyEncoder
 # Default route/test
 @app.route('/')
 def index():
-    return jsonify({'db':str(get_database()['users'])})
+    return """<a href="/api/help/">Link to api help</a><br><a href="/main/">Link to viewer</a>"""
 
 # Api
 
-# TODO Default route/test
+# Help
 @app.route('/api/help/')
 def h():
     return '''
@@ -713,7 +717,7 @@ def explore():
                 reviews=[]
             )
     
-    return books
+    return jsonify(books)
 
 # Get data for specific book in our own database
 @app.route('/api/getbook/', methods=['POST'])
@@ -1056,7 +1060,7 @@ def main():
     import os
     exists = os.path.exists('frontend/main.html')
     if not exists: 
-        return '404 NOT FOUND, NEWSLETTER DOES NOT EXIST.'
+        return '404 NOT FOUND, FILE DOES NOT EXIST.'
     resp = make_response(render_template('main.html'))
     # resp.headers['Access-Control-Allow-Origin'] = '*'
     return resp
