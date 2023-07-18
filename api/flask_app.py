@@ -462,7 +462,10 @@ def auth_user(
     if user['uname']==uname and user['pword']==pword:
 
         # Add authkey
-        user['akeys'] += auth_key
+        akeys = []
+        for i in user['akeys']:
+            akeys.append(i)
+        akeys.append(auth_key)
         
         # If large amount of authorized key
         if len(user['akeys'])>10:
@@ -476,7 +479,7 @@ def auth_user(
             {"uname":uname},
             {
                 "$set":{
-                    "akeys":user['akeys']
+                    "akeys":akeys
                 }
             }
         )
@@ -743,7 +746,7 @@ def search():
 
     # Search for books with term 
     books = bookexistsfull(searchterm)
-    return books
+    return jsonify(books)
 
 # Rate a book
 @app.route('/api/rate/', methods=['POST'])
@@ -942,7 +945,7 @@ def deletecomment():
     
     # Get data
     post_data = request.get_json()
-    
+    print(post_data)
     # User information
     uname  = post_data['uname']
     akey   = post_data['akey']
@@ -959,12 +962,14 @@ def deletecomment():
     
     # If book exists on our database, add comment
     book = bookexists(isbn)
+    print(book)
     if book:
 
         book_reviews = book['reviews']
         book_reviews_tosave = []
 
         for review in book_reviews:
+            print(str(review["uname"])+"  "+parent_uname)
             if review['uname'] == parent_uname:
 
                 comments_to_keep = []

@@ -2,7 +2,7 @@
 
 View NYT Bestsellers
 
-![Example of the page once the user has logged in and is viewing the books.](image.png)
+[![Example of the page once the user has logged in and is viewing the books.](image.png)](https://waveplatform.pythonanywhere.com/main/)
 
 Flask is used to serve all REST API requests, additionally it also serves the user interface.
 
@@ -168,7 +168,7 @@ I currently have a slightly modified version of the flask code running on a prem
 		- [x] Add
 		- [x] Delete
 		- [x] View
-		- [ ] Edit
+		- [x] Edit
 - [ ] Create UI
 	- [x] End point username / password
 	- [x] Allow searching the data source
