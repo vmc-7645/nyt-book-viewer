@@ -817,7 +817,7 @@ def rate():
             {
                 "$set":{
                     "num_reviews":int(num_reviews),
-                    "rating":int(totalscoreundivided/int(num_reviews)),
+                    "rating":int(totalscoreundivided/int(num_reviews if num_reviews != 0 else 1)),
                     "reviews":book_reviews_tosend
                 }
             }
@@ -877,7 +877,7 @@ def deleterating():
             }
         )
         
-        return jsonify({'type':'success','message':'Review successfully posted.'})
+        return jsonify({'type':'success','message':'Review successfully deleted.'})
 
     # If book does not exist
     if not nyt.bookexists(getkey('nyt.key'),isbn):
@@ -1012,6 +1012,7 @@ def deletecomment():
                     }
                 }
             )
+            return jsonify({'type':'success','message':'Comment deleted.'})
         return jsonify({'type':'error','message':'Comment not deleted. Review not found.'})
 
     # If book does not exist

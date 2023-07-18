@@ -369,6 +369,17 @@
             return keyValue ? keyValue[2] : null;
         }
 
+        // Functionality
+
+        function removeElement(id) {
+            var elem = document.getElementById(id);
+            return elem.parentNode.removeChild(elem);
+        }
+
+        function uid(){
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
         // Login and Signup
 
         const loginRunner = async (uname,pword) => {
@@ -712,7 +723,7 @@
                 btn = `<button onclick="deleteReview(this)">Delete</button>`;
             }
             review = `
-            <div class="userreview">
+            <div id="entirereviewof${user}" class="userreview">
                 ${createStagnantStars(stars)}
                 <br>
                 <span class="username">${user}</span> ${btn}
@@ -756,6 +767,7 @@
             Delete review
             */
             await deleteReviewAction();
+            removeElement(document.getElementById("entirereviewof"+getCookie("uname")).id);
         }
 
         function createComment(user,content){
@@ -771,12 +783,13 @@
             ----------
             HTML of comment to be displayed
             */
+            thisuid = uid()
             btn = ``;
             if (user ==getCookie("uname")) {
-                btn = `<button id="${content}" onclick="deleteComment(this)">Delete</button>`;
+                btn = `<button id="${thisuid}" onclick="deleteComment(this)">Delete</button>`;
             }
             comment = `
-            <div class="comment">
+            <div id="entire${thisuid}" class="comment">
                 <span class="username">${user}</span> ${btn}
                 <p>${content}</p>
             </div>`;
@@ -808,6 +821,7 @@
             Remove comment
             */
             await deleteCommentAction(element.id);
+            removeElement("entire"+element.id)
         }
 
         function createCommentList(usersandcomments){
@@ -917,10 +931,10 @@
         }
 
         // Actually get books
-        // initPage()
+        initPage()
 
         //Test
-        document.getElementById("bookshelf").innerHTML = exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook;
+        // document.getElementById("bookshelf").innerHTML = exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook + exampleBook;
         
         // Test if user is logged in already, if so remove login screen
         if (getCookie("uname") != null){
