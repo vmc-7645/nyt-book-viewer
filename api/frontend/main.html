@@ -791,7 +791,7 @@
             comment = `
             <div id="entire${thisuid}" class="comment">
                 <span class="username">${user}</span> ${btn}
-                <p>${content}</p>
+                <p  id="content${thisuid}">${content}</p>
             </div>`;
             return comment
         }
@@ -820,7 +820,7 @@
             /*
             Remove comment
             */
-            await deleteCommentAction(element.id);
+            await deleteCommentAction(document.getElementById("content"+element.id).innerText);
             removeElement("entire"+element.id)
         }
 

@@ -156,10 +156,10 @@ Run test environment (non-production) with `py -3 -m flask_app`. Or run in produ
 
 - [ ] Create API
 	- [x] End point username / password
-	- [ ] Allow searching the data source
+	- [x] Allow searching the data source
 	- [x] Allow rating system
 		- [x] Add
-		- [ ] Delete
+		- [x] Delete
 		- [x] View
 		- [x] Edit
 	- [x] Comment system
@@ -169,14 +169,14 @@ Run test environment (non-production) with `py -3 -m flask_app`. Or run in produ
 		- [ ] Edit
 - [ ] Create UI
 	- [x] End point username / password
-	- [ ] Allow searching the data source
-	- [ ] Allow rating system
+	- [x] Allow searching the data source
+	- [x] Allow rating system
 		- [x] Add
-		- [ ] Delete
+		- [x] Delete
 		- [x] View
 		- [x] Edit
 	- [ ] Comment system
 		- [x] Add
-		- [ ] Delete
+		- [x] Delete
 		- [x] View
 		- [ ] Edit

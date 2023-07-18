@@ -967,6 +967,7 @@ def deletecomment():
     
     # Get data
     post_data = request.get_json()
+    print("POST DATA:"+str(post_data))
 
     # User information
     uname  = post_data['uname']
@@ -974,7 +975,7 @@ def deletecomment():
 
     # Book and post
     isbn   = post_data['isbn']
-    comment = post_data['content']
+    commentcontent = post_data['content']
 
     # If account action is authorized
     authorized = auth_action(uname,akey)
@@ -994,8 +995,8 @@ def deletecomment():
                 comments_to_keep = []
                 for comment in review['comments']:
                     comments_to_keep = []
-                    if comment['uname'] == uname and comment['comment'] == comment:
-                        print("REMOVED COMMENT : "+str(comment))
+                    if comment['uname'] == uname and comment['comment'] == commentcontent:
+                        break
                     else:
                         comments_to_keep.append(comment)
                 review["comments"]=comments_to_keep
