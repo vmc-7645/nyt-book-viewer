@@ -164,7 +164,7 @@ Run test environment (non-production) with `py -3 -m flask_app`. Or run in produ
 		- [x] Edit
 	- [x] Comment system
 		- [x] Add
-		- [ ] Delete
+		- [x] Delete
 		- [x] View
 		- [ ] Edit
 - [ ] Create UI

@@ -198,9 +198,6 @@ def get_database():
     # Create a connection using MongoClient. You can import MongoClient or use pymongo.MongoClient
     client = pymongo.MongoClient(CONNECTION_STRING, connect=False)
     
-    # Create the database for our example (we will use the same database throughout the tutorial
-    # print(client.list_database_names())
-
     return client['nyt']
 
 def bookexists(
@@ -702,12 +699,10 @@ def explore():
         category, #"full-overview",
         int(page_number)*20
     )["results"]["books"]
-    # print(books.keys())
 
     # go through books, if a book is not in our database, add it
     for book in books:
         book_isbn = book["primary_isbn13"]
-        # print(book)
         if not bookexists(book_isbn):
             add_book(
                 isbn=book_isbn,
@@ -730,7 +725,6 @@ def getbook():
     # page
     isbn = post_data['isbn']
     book = bookexists(str(isbn))
-    print(book)
     return jsonify(dict(book))
 
 # Search for books in our database
@@ -753,7 +747,6 @@ def rate():
     
     # Get data
     post_data = request.get_json()
-    print(post_data)
 
     # User information
     uname  = post_data['uname']
@@ -789,7 +782,7 @@ def rate():
                     del(review)
                     continue
                 if review['uname'] == uname:
-                    print("Review removed")
+                    # Remove review
                     review_found == True
                     del(review)
                 else:
@@ -804,13 +797,12 @@ def rate():
                 'review': given_review,
                 'comments':[]
             })
-        
     
         try:
             totalscoreundivided = sum([int(i['rating']) for i in book['reviews']])
         except:
             totalscoreundivided = rating
-        # print(book_reviews)
+        
         # Update authorized keys
         dbname.books.update_one(
             {"isbn":isbn},
@@ -854,17 +846,14 @@ def deleterating():
     book = bookexists(isbn)
     if book:
         dbname = get_database()
-
         num_reviews = book['num_reviews']-1
         book_reviews = book['reviews']
-        
         reviews_to_save = []
         for review in book_reviews:
             if review['uname'] != uname:
                 reviews_to_save.append(review)
-        
         totalscoreundivided = sum([int(i['rating']) for i in book['reviews']])
-        
+
         # Update authorized keys
         dbname.books.update_one(
             {"isbn":isbn},
@@ -876,9 +865,7 @@ def deleterating():
                 }
             }
         )
-        
         return jsonify({'type':'success','message':'Review successfully deleted.'})
-
     # If book does not exist
     if not nyt.bookexists(getkey('nyt.key'),isbn):
         return jsonify({'type':'error','message':'Book rating failed. ISBN not found.'})
@@ -890,7 +877,6 @@ def comment():
     
     # Get data
     post_data = request.get_json()
-    print("POST DATA ::: "+str(post_data))
 
     # User information
     uname  = post_data['uname']
@@ -909,40 +895,25 @@ def comment():
     # If book exists on our database, add comment
     book = bookexists(isbn)
     if book:
-        print("BOOK EXISTS")
-
         book_reviews = book['reviews']
         book_reviews_tosend = []
-
-        # print(book_reviews)
-        # print(book)
-
         if type(book_reviews) != type(None):
             for review in book_reviews:
-                print("REVIEW NUM:::"+str(index))
                 if type(review) == str:
-                    print("REVIEW IS STRING:::"+review)
                     del(review)
                     continue
                 elif review['uname'] == review_uname:
-                    print("PREEDIT REVIEW :::::"+str(review))
                     comments = review["comments"]
                     comments_to_send = []
-
                     for commentincomments in comments:
                         if str(commentincomments)==str:
                             continue
                         comments_to_send.append(commentincomments)
-                    
                     comments_to_send.append({"uname":uname, "comment":comment})
                     review["comments"]=comments_to_send
-                    
                     book_reviews_tosend.append(review)
                 else:
                     book_reviews_tosend.append(review)
-                print("REVIEW:::::"+str(review))
-            
-            print("REVIEWS BEING SENT -----------------------\n"+str(book_reviews_tosend))
             dbname = get_database()
             dbname.books.update_one(
                 {"isbn":isbn},
@@ -967,14 +938,14 @@ def deletecomment():
     
     # Get data
     post_data = request.get_json()
-    print("POST DATA:"+str(post_data))
-
+    
     # User information
     uname  = post_data['uname']
     akey   = post_data['akey']
 
     # Book and post
     isbn   = post_data['isbn']
+    parent_uname  = post_data['parent_uname']
     commentcontent = post_data['content']
 
     # If account action is authorized
@@ -990,7 +961,7 @@ def deletecomment():
         book_reviews_tosave = []
 
         for review in book_reviews:
-            if review['uname'] == uname:
+            if review['uname'] == parent_uname:
 
                 comments_to_keep = []
                 for comment in review['comments']:

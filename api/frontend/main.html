@@ -25,7 +25,7 @@
             padding-left: 2px;
             padding-right: 4px;
         }
-        h1, h2, h3 {
+        h1, h2, h3, h4 {
             padding-left: 2px;
             padding-right: 2px;
             font-size: 1rem;
@@ -35,11 +35,6 @@
             font-size: 1.2rem;
             color: black;
         }
-        h2 {
-            color: rgb(66, 66, 66);
-            /* font-style: italic; */
-        }
-
         p {
             padding-left: 2px;
             padding-right: 2px;
@@ -48,6 +43,8 @@
             color: inherit;
             text-decoration: none;
         }
+
+        /* Button Styling */
         button {
             height:1.5rem;
             margin-top: 2px;
@@ -56,13 +53,12 @@
             border: none;
             background-color: rgb(244, 244, 244);
             box-shadow: 0px 1px 1px 1px rgb(144, 144, 144);
-            /* visibility: visible; */
         }
         button:hover {background-color: rgb(227, 227, 227);}
-        button:active {background-color: rgb(243, 243, 243);
-            box-shadow: 0px -1px 1px 1px rgb(144, 144, 144);}
+        button:active {background-color: rgb(243, 243, 243);box-shadow: 0px -1px 1px 1px rgb(144, 144, 144);}
         button:disabled {visibility: hidden;}
 
+        /* Text Input */
         textarea {
             width: 99%;
             height:1.5rem;
@@ -73,12 +69,7 @@
             box-shadow: 0px 1px 1px 1px rgb(144, 144, 144);
             padding-left:4px;
         }
-        textarea#reviewtextarea{
-            height:3rem;
-        }
-        .addcomment textarea{
-            height: 3rem;
-        }
+        textarea#reviewtextarea{height:3rem;}
         select {
             height:1.5rem;
             border-radius: 2px;
@@ -86,48 +77,25 @@
             box-shadow: 0px 1px 1px 1px rgb(144, 144, 144);
         }
 
+        /* Login */
         .login {
             margin: auto;
-            width: 20rem;
             margin-top: 20rem;
+            width: 20rem;
         }
+        .loginmessage{color:red;}/* Error message for login popup */
 
-        .starholder {
-            margin-top: 0.2rem;
-        }
+        /* Star Styling */
+        .starholder {margin-top: 0.2rem;}
+        .star {font-size: 1rem;color: orange;}
+        .star#selectedstar ~ .star{color: rgb(66, 66, 66);} /*After currently hovered star*/
+        .starholder.selection {background-color: rgb(255, 255, 255,0.9);}
+        .starholder.selection .selectionstar {color: orange;cursor: pointer;}
+        .starholder.selection .selectionstar#selectedstar ~.selectionstar {color: rgb(66, 66, 66);cursor: pointer;}
+        .starholder.selection .selectionstar:hover {text-shadow: 1px orange; -webkit-text-stroke: 2px orange; cursor: pointer;}
+        .starholder.selection .selectionstar:hover ~.selectionstar {color: rgb(66, 66, 66);cursor: pointer;}
 
-        .star {
-            font-size: 1rem;
-            color: orange;
-        }
-        .star#selectedstar ~ .star{
-            color: rgb(66, 66, 66);
-        }
-        
-        .starholder.selection {
-            background-color: rgb(255, 255, 255,0.9);
-        }
-
-        .starholder.selection .selectionstar {
-            color: orange;
-            cursor: pointer;
-        }
-
-        .starholder.selection .selectionstar#selectedstar ~.selectionstar {
-            color: rgb(66, 66, 66);
-            cursor: pointer;
-        }
-        .starholder.selection .selectionstar:hover {
-            /* color: rgb(66, 66, 66); */
-            text-shadow: 1px orange;
-            -webkit-text-stroke: 2px orange;
-            cursor: pointer;
-        }
-        .starholder.selection .selectionstar:hover ~.selectionstar {
-            color: rgb(66, 66, 66);
-            cursor: pointer;
-        }
-
+        /* Review */
         .userreview {
             background-color: white;
             border-radius: 2px;
@@ -136,7 +104,6 @@
             box-shadow: 0px 1px 1px 1px rgb(144, 144, 144);
         }
         .username {
-            /* color: rgb(0, 0, 0); */
             font-weight: 800;
         }
         .commentsholder {
@@ -150,6 +117,9 @@
             border-left: 4px solid rgb(224, 224, 224);
             padding-left: 4px;
         }
+        .addcomment textarea{
+            height: 3rem;
+        }
 
         .holder {
             margin: auto;
@@ -157,7 +127,6 @@
             margin-bottom: 1rem;
             width: 60%;
         }
-        
 
         .holder.loginholder {
             overflow-y: scroll;
@@ -186,6 +155,8 @@
             z-index: 1600;
             visibility: hidden;
         }
+
+        /* Books in Selection */
         .holder.bookholder {
             display: grid;
             grid-template-columns: 20% 80%;
@@ -195,36 +166,25 @@
             border-radius: 8px;
             box-shadow: 0px 1px 4px 1px rgb(144, 144, 144, 0.8);
         }
-
         .holder.bookholder .bookinfo {
             padding-left: 1rem;
         }
         .holder.bookholder .bookinfo h1 span.rank{
             color:rgb(87, 87, 87);
-            /* font-size: 2rem; */
             font-style: italic;
             margin-right: 1rem;
         }
-        h2 span.author {
-            color: inherit;
-        }
-        h2 span.publisher {
-            color: rgb(177, 177, 177);
-        }
+        h2 span.author {color: inherit;}
+        h2 span.publisher {color: rgb(177, 177, 177);}
         span.isbn{
             font-family: 'Azeret Mono', monospace;
             color:rgb(191, 191, 191);
             font-size: 0.8rem;
-            /* margin-right: 1rem; */
         }
-
-        .loginmessage{
-            color:red;
-        }
-
     </style>
-    
     <body>
+
+        <!-- Login and Signup Popup -->
         <div id="loginviewer" class="holder loginholder">
             <div class="login">
                 <p>Login or Signup</p>
@@ -235,14 +195,14 @@
                 <p id="loginmessage"></p>
             </div>
         </div>
+
+        <!-- Review viewer -->
         <div id="reviewviewer" class="holder reviewviewerholder">
             <div class="holder">
                 <p>Review Viewer</p>
                 <button onclick="hidereviews()">Close Review Viewer</button>
                 <p>Give your review:</p>
-
                 <textarea id="reviewtextarea" placeholder="Submit your review for this book here. Submitting again will edit previous review to match."></textarea>
-
                 <div class="starholder selection">
                     <span>Select your rating:</span>
                     <span class="fa fa-star selectionstar" onclick="rateselectedfromstar(this,1)" id="selectedstar"></span>
@@ -261,15 +221,15 @@
             </div>
             <div id="userreviews" class="holder"></div>
         </div>
+
+        <!-- Searchbar, button, and dropdown -->
         <div class="holder searchbar">
+            <!-- TODO determine if this is good looking or not -->
             <!-- <p><span id="currentuser" class="username">Current Username</span></p> -->
             <p>Search NYT Best Sellers</p>
             <textarea id="searchbar" placeholder="TITLE, Author, ISBN, etc"></textarea>
             <button id="categorySearchButton" onclick="searchBooks()">Search</button>
             <select name="categories" id="categories">
-                <!-- TODO: Allow for all categories. -->
-                <!-- <option value="full-overview">All Categories</option> -->
-                <!-- <option value="overview">Five Top From All Categories</option> -->
                 <option value="combined-print-and-e-book-fiction">Combined Print and E-Book Fiction</option>
                 <option value="combined-print-and-e-book-nonfiction">Combined Print and E-Book Nonfiction</option>
                 <option value="hardcover-fiction">Harcover Fiction</option>
@@ -330,20 +290,17 @@
                 <option value="travel">Travel</option>
                 <option value="young-adult-paperback-monthly">Young Adult Paperback Monthly</option>
             </select>
-
         </div>
 
         <!-- List of books shown -->
-        <div id="bookshelf" class="bookshelf">
-
-        </div>
-        
+        <div id="bookshelf" class="bookshelf"></div>
     </body>
-
     <script>
 
-        urllink = 'http://127.0.0.1:5000/'
-
+        // Location of API
+        urllink = 'http://127.0.0.1:5000/' 
+        
+        // Used for testing
         exampleBook = `
         <div class="holder bookholder">
             <div><img src="https://storage.googleapis.com/du-prd/books/images/9780593236598.jpg"></div>
@@ -353,8 +310,7 @@
                 <p>A look at recent scientific research on aging and longevity.</p>
                 <div><button id="9780593236598" onclick="viewreviews(this)">Reviews and Ratings</button> <span class="isbn"> ISBN10:0593236599 ISBN13:9780593236598</span></div>
             </div>
-        </div>
-        `;
+        </div>`;
 
         // Cookie Management
 
@@ -386,15 +342,8 @@
             const response = await fetch(urllink+'api/login/',
                 {
                     method: 'POST',
-                    body: JSON.stringify(
-                        {
-                            'uname':uname,
-                            'pword':pword
-                        }
-                    ),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
+                    body: JSON.stringify({'uname':uname,'pword':pword}),
+                    headers: {'Content-Type': 'application/json',}
                 }
             );
             
@@ -418,7 +367,6 @@
             
             document.getElementById("login").disabled = true;
             setTimeout(function(){document.getElementById("login").disabled = false;},5000);
-
             uname = document.getElementById("unameinput").value;
             pword = document.getElementById("pwordinput").value;
             response = await loginRunner(uname,pword);
@@ -437,15 +385,8 @@
             const response = await fetch(urllink+'api/signup/',
                 {
                     method: 'POST',
-                    body: JSON.stringify(
-                        {
-                            'uname':uname,
-                            'pword':pword
-                        }
-                    ),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
+                    body: JSON.stringify({'uname':uname,'pword':pword}),
+                    headers: {'Content-Type': 'application/json',}
                 }
             );
             
@@ -512,14 +453,12 @@
             */
 
             document.getElementById("categorySearchButton").disabled = true;
-            setTimeout(function(){document.getElementById("categorySearchButton").disabled = false;},1000);
+            setTimeout(function(){document.getElementById("categorySearchButton").disabled = false;},5000);
            
             categoryToGet = document.getElementById("categories").value;
             await loadBooks(categoryToGet,0,document.getElementById("searchbar").value)
             document.getElementById("searchbar").value = '';
             pageNumber = 0
-
-            // TODO Integrate searchbar that allows for item llokup
         }        
 
         // Review and Commenting System
@@ -537,9 +476,7 @@
                             'rating':ratingbyuser = currentratingselected
                         }
                     ),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
+                    headers: {'Content-Type': 'application/json',}
                 }
             );
             
@@ -582,25 +519,20 @@
                             'comment':document.getElementById("comment"+reviewerid).value
                         }
                     ),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
+                    headers: {'Content-Type': 'application/json',}
                 }
             );
-            
             const signupresponse = await response.json(); //extract JSON from the http response
             console.log(signupresponse)
             return signupresponse
         }
 
         async function addComment(element){
-            
             commentAttemptReturn = await addCommentRunner(element.id)
             if (commentAttemptReturn["type"]=="error"){
                 window.alert(`SERVER MESSAGE: ${commentAttemptReturn["message"]}`);
                 return "Failure"
             }
-
             document.getElementById("comments"+element.id).innerHTML += createComment(getCookie("uname"),document.getElementById("comment"+element.id).value)
             
             // Reset comment textarea
@@ -674,6 +606,7 @@
 
         function createReviewList(usersandreviews){
             /*
+            Generates HTML for viewing reviews
             
             Parameters
             ----------
@@ -697,7 +630,6 @@
                 reviews += createReview(ureview["uname"],ureview["rating"],ureview["review"],ureview["comments"]);
             }
             return reviews
-
         }
 
         function createReview(user,stars,content,comments){
@@ -729,7 +661,7 @@
                 <span class="username">${user}</span> ${btn}
                 <p>${content}</p>
                 <div id="comments${user}" class="commentsholder">
-                    ${createCommentList(comments)}
+                    ${createCommentList(comments,user)}
                 </div>
                 <div class="commentsholder">
                     <div class="addcomment">
@@ -737,8 +669,7 @@
                         <button id="${user}" onclick="addComment(this)">Add Comment</button>
                     </div>
                 </div>
-            </div>
-            `;
+            </div>`;
             return review
         }
 
@@ -746,20 +677,11 @@
             const response = await fetch(urllink+'api/deleterating/',
                 {
                     method: 'POST',
-                    body: JSON.stringify(
-                        {
-                            'uname':getCookie("uname"),
-                            'akey':getCookie("akey"),
-                            'isbn':currentbookisbn
-                        }
-                    ),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
+                    body: JSON.stringify({'uname':getCookie("uname"),'akey':getCookie("akey"),'isbn':currentbookisbn}),
+                    headers: {'Content-Type': 'application/json',}
                 }
             );
             const bookresponse = await response.json();
-
         }
 
         async function deleteReview(){
@@ -770,7 +692,8 @@
             removeElement(document.getElementById("entirereviewof"+getCookie("uname")).id);
         }
 
-        function createComment(user,content){
+        parent_u = ""
+        function createComment(user,content,parent_uname){
             /*
             Generates HTML for a single comment.
 
@@ -783,9 +706,11 @@
             ----------
             HTML of comment to be displayed
             */
+            parent_u = parent_uname
             thisuid = uid()
             btn = ``;
-            if (user ==getCookie("uname")) {
+            console.log(getCookie("uname")+" == "+user+"? ")
+            if (user == getCookie("uname")) {
                 btn = `<button id="${thisuid}" onclick="deleteComment(this)">Delete</button>`;
             }
             comment = `
@@ -796,7 +721,7 @@
             return comment
         }
 
-        const deleteCommentAction = async (contentOfComment) => {
+        const deleteCommentAction = async (contentOfComment,parent_uname) => {
             const response = await fetch(urllink+'api/deletecomment/',
                 {
                     method: 'POST',
@@ -804,13 +729,12 @@
                         {
                             'uname':getCookie("uname"),
                             'akey':getCookie("akey"),
+                            'parent_uname':parent_uname,
                             'isbn':currentbookisbn,
                             'content':contentOfComment
                         }
                     ),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
+                    headers: {'Content-Type': 'application/json',}
                 }
             );
             const bookresponse = await response.json();
@@ -820,11 +744,13 @@
             /*
             Remove comment
             */
-            await deleteCommentAction(document.getElementById("content"+element.id).innerText);
+            console.log("DELETING COMMENT WITH PARENT "+parent_u)
+            await deleteCommentAction(document.getElementById("content"+element.id).innerText,parent_u);
             removeElement("entire"+element.id)
+            parent_u = ""
         }
 
-        function createCommentList(usersandcomments){
+        function createCommentList(usersandcomments,parent_uname){
             /*
             Generates HTML for a multiple comments.
 
@@ -834,6 +760,7 @@
                 [
                     {"uname":"username","comment":"content of comment"}
                 ]
+            parent_uname: creator of review
 
             Returns
             ----------
@@ -842,42 +769,30 @@
             comments=``;
             for (index in usersandcomments){
                 uc = usersandcomments[index];
-                comments += createComment(uc["uname"],uc["comment"]);
+                comments += createComment(uc["uname"],uc["comment"],parent_uname);
             }
             return comments
         }
 
         const loadBooks = async (category, pagenumber, searchterm) => {
-
-            
             document.getElementById("bookshelf").innerHTML = `<div class="holder"><h1 class="loading">Loading...</h1></div>`;
             if (searchterm.length>2){
                 const response = await fetch(urllink+'api/search/',
                     {
                         method: 'POST',
-                        body: JSON.stringify(
-                            {
-                                'searchterm':searchterm
-                            }
-                            ), // string or object
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
+                        body: JSON.stringify({'searchterm':searchterm}), 
+                        headers: {'Content-Type': 'application/json',}
                     }
                 );
                 const returnedbooks = await response.json(); //extract JSON from the http response
-                console.log(returnedbooks)
                 document.getElementById("bookshelf").innerHTML = ``;
 
                 if (returnedbooks["type"]=="error"){
                     document.getElementById("bookshelf").innerHTML = `<div class="holder"><h1 class="loading">${returnedbooks["message"]}</h1></div>`;
                     return
                 }
-                
-                // currentlyviewedbooks = ``;
                 for(index in returnedbooks){
                     book = returnedbooks[index]
-                    console.log(book)
                     document.getElementById("bookshelf").innerHTML += createExampleBook(
                         book["book_image"],
                         book["amazon_product_url"],
@@ -898,20 +813,14 @@
                                 'page_number':pagenumber,
                                 'category':category
                             }
-                            ), // string or object
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
+                            ),
+                        headers: {'Content-Type': 'application/json',}
                     }
                 );
                 const returnedbooks = await response.json(); //extract JSON from the http response
-                console.log(returnedbooks)
                 document.getElementById("bookshelf").innerHTML = ``;
-                
-                // currentlyviewedbooks = ``;
                 for(index in returnedbooks){
                     book = returnedbooks[index]
-                    console.log(book)
                     document.getElementById("bookshelf").innerHTML += createExampleBook(
                         book["book_image"],
                         book["amazon_product_url"],
@@ -941,47 +850,28 @@
             document.getElementById("loginviewer").style = "visibility: hidden;";
         }
 
+        // Hide review viewer
         function hidereviews(element){
             document.getElementById('reviewviewer').style = 'visibility: hidden;';
-            // document.getElementById('acceptcookies').style = 'visibility: hidden;';
         }
 
         const populateReviewList = async (isbn) => {
-            console.log(isbn)
             const response = await fetch(urllink+'api/getbook/',
                 {
                     method: 'POST',
-                    body: JSON.stringify(
-                        {
-                            'isbn':`${isbn}`
-                        }
-                    ),
-                    headers: {
-                        'Content-Type': 'application/json',
-                    }
+                    body: JSON.stringify({'isbn':`${isbn}`}),
+                    headers: {'Content-Type': 'application/json',}
                 }
             );
-            
             const bookresponse = await response.json(); 
-            
-
             return createReviewList(bookresponse["reviews"])
         }
 
         currentbookisbn = "";
         async function viewreviews(element){
             document.getElementById('reviewviewer').style = 'visibility: visible;';
-            
-            // // Check if current ISBN is element id, if so do nothing so as to save bandwidth
-            // if (currentbookisbn==element.id){
-            //     return
-            // }
-
             document.getElementById('userreviews').innerHTML = await populateReviewList(element.id);
-
-            console.log(element.id);
             currentbookisbn=element.id;
-            // document.getElementById('acceptcookies').style = 'visibility: visible;';
         }
 
         currentratingselected = 0;
@@ -991,8 +881,5 @@
             currentratingselected=ratingnumber;
         }
 
-
-
     </script>
-
 </html>
