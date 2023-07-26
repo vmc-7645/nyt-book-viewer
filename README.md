@@ -196,3 +196,5 @@ I currently have a slightly modified version of the flask code running on a prem
 - [ ] UI
   - [ ] Optimization
   - [ ] Better Styling
+    - [ ] Search result [highlighting](https://stackoverflow.com/questions/32130130/how-to-highlight-all-occurrences-of-a-word-on-a-page-with-javascript-or-jquery) 
+    - [ ] Dark theme switcher
